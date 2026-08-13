@@ -1,44 +1,659 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&display=swap');
+/*
+  HOME PAGE STYLES
+  This file controls index.html only.
+  The colors are repeated as variables below, so they are easy to change later.
+*/
 
-* { box-sizing:border-box; }
-html { scroll-behavior:smooth; }
-.home-page { margin:0; color:#11110f; background:#f5f1e8; font-family:'DM Sans',sans-serif; }
-.home-page h1,.home-page h2,.home-page h3,.home-page p { margin-top:0; }
-.home-hero { min-height:690px; display:grid; grid-template-columns:1fr 1fr; background:#11110f; color:#fff; overflow:hidden; }
-.hero-copy-block { padding:86px 7vw 60px 6vw; display:flex; flex-direction:column; justify-content:center; }
-.hero-copy-block h1 { font:clamp(54px,6.5vw,96px)/.88 'Archivo Black',sans-serif; letter-spacing:-5px; margin:0 0 28px; }
-.hero-copy-block h1 span { color:#d9f24f; }
-.hero-copy-block>p:not(.eyebrow) { color:#b7b4ac; line-height:1.65; max-width:590px; font-size:16px; }
-.hero-actions { display:flex; align-items:center; gap:28px; margin:18px 0 50px; }
-.primary-button,.light-button { display:inline-flex; align-items:center; justify-content:space-between; gap:35px; text-decoration:none; padding:17px 20px; background:#ef3b2d; color:#fff; font-size:12px; letter-spacing:1px; font-weight:800; box-shadow:6px 6px 0 #d9f24f; }
-.primary-button:hover { color:#fff; transform:translate(-2px,-2px); box-shadow:8px 8px 0 #d9f24f; }
-.text-link { color:#fff; text-decoration:none; font-size:10px; letter-spacing:1px; font-weight:800; border-bottom:1px solid #777; padding-bottom:4px; }
-.hero-proof { border-top:1px solid #3e3d38; padding-top:22px; display:grid; grid-template-columns:repeat(3,1fr); max-width:590px; }
-.hero-proof div { border-right:1px solid #3e3d38; padding-left:18px; }
-.hero-proof div:first-child { padding-left:0; }.hero-proof div:last-child{border:0}
-.hero-proof strong,.hero-proof small { display:block; }.hero-proof strong{font:13px 'Archivo Black'}.hero-proof small{color:#888;font-size:10px;margin-top:4px}
-.hero-image-wrap { min-width:0; position:relative; background:#d9f24f; display:grid; place-items:center; padding:60px; isolation:isolate; }
-.hero-grid { position:absolute; inset:0; z-index:-1; opacity:.26; background-image:linear-gradient(#111 1px,transparent 1px),linear-gradient(90deg,#111 1px,transparent 1px); background-size:42px 42px; }
-.hero-image-wrap:after { content:""; width:68%; height:22%; background:rgba(0,0,0,.22); filter:blur(30px); border-radius:50%; position:absolute; bottom:12%; z-index:-1; }
-.hero-image-wrap img { width:min(100%,680px); mix-blend-mode:multiply; transform:rotate(-2deg); }
-.hero-image-wrap>p { position:absolute; bottom:22px; right:28px; font:11px 'Archivo Black'; letter-spacing:2px; writing-mode:vertical-rl; }
-.sticker { position:absolute; z-index:2; display:grid; place-items:center; text-align:center; border-radius:50%; font:12px/1.1 'Archivo Black'; transform:rotate(-10deg); }
-.sticker-one { width:105px;height:105px;background:#ef3b2d;color:#fff;top:50px;right:40px;border:3px solid #111;box-shadow:5px 5px 0 #111}.sticker-two{width:92px;height:92px;background:#fff;bottom:60px;left:30px;border:2px solid #111;transform:rotate(8deg)}
-.ticker { background:#ef3b2d; color:#fff; overflow:hidden; padding:15px 0; white-space:nowrap; font:13px 'Archivo Black'; letter-spacing:2px; }
-.ticker div { width:max-content; animation:marquee 18s linear infinite; }.ticker span{color:#d9f24f;margin:0 25px}@keyframes marquee{to{transform:translateX(-25%)}}
-.vibes-section { padding:100px 5vw 115px; max-width:1600px; margin:auto; }
-.home-section-head { display:grid; grid-template-columns:1fr 360px; align-items:end; margin-bottom:40px; }
-.home-section-head h2,.how-intro h2 { font:clamp(40px,5vw,69px)/.93 'Archivo Black'; letter-spacing:-3px; margin:0; }.home-section-head h2 span,.how-intro h2 span{color:#ef3b2d}
-.home-section-head>p { color:#736f67; line-height:1.65; font-size:14px; }
-.home-vibe-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:13px; }
-.home-vibe-card { min-height:410px; padding:28px; position:relative; overflow:hidden; text-decoration:none; color:#111; border:2px solid #111; display:flex; flex-direction:column; transition:.2s; }
-.home-vibe-card:hover { transform:translateY(-8px); color:#111; box-shadow:8px 8px 0 #111; }
-.home-vibe-card.gaming{background:#d9f24f}.home-vibe-card.movies{background:#ef3b2d;color:#fff}.home-vibe-card.movies:hover{color:#fff}.home-vibe-card.sports{background:#8ac8ef}.home-vibe-card.study{background:#f4b6d3}
-.vibe-icon { font-size:46px; margin-bottom:auto; }.home-vibe-card small{font-weight:800;letter-spacing:2px;font-size:9px}.home-vibe-card h3{font:40px/.9 'Archivo Black';margin:8px 0 14px;letter-spacing:-2px}.home-vibe-card p{font-size:12px;line-height:1.5;max-width:190px}.home-vibe-card b{font-size:9px;letter-spacing:1px;margin-top:15px;border-bottom:2px solid currentColor;width:max-content;padding-bottom:3px}.home-vibe-card em{position:absolute;right:-3px;bottom:-22px;font:100px 'Archivo Black';opacity:.09;font-style:normal}
-.how-section { background:#fffdf8; display:grid; grid-template-columns:.8fr 1.2fr; gap:8vw; padding:100px 6vw; }
-.how-intro .primary-button { margin-top:35px; }.how-steps article{display:grid;grid-template-columns:60px 95px 1fr;gap:24px;align-items:center;border-top:1px solid #d9d4c9;padding:25px 0}.how-steps article>span{font:28px 'Archivo Black';color:#c7c1b6}.how-steps img{width:80px;height:80px;object-fit:cover;filter:contrast(1.1)}.how-steps h3{font:18px 'Archivo Black';margin-bottom:7px}.how-steps p{color:#777168;font-size:13px;line-height:1.5;margin:0}
-.cta-banner { background:#ef3b2d; color:#fff; padding:70px 7vw; display:flex; justify-content:space-between; align-items:center; }
-.cta-banner .eyebrow{color:#d9f24f}.cta-banner h2{font:clamp(39px,5vw,68px)/.95 'Archivo Black';letter-spacing:-3px;margin:0}.light-button{background:#fff;color:#111;box-shadow:7px 7px 0 #111;padding:20px 25px}.light-button:hover{color:#111}
-.home-footer { background:#11110f;color:#fff;padding:70px 6vw 25px}.footer-top{display:grid;grid-template-columns:1.3fr 1fr;gap:80px;padding-bottom:70px}.footer-statement .pack-logo{color:#fff}.footer-statement h2{font:37px/.95 'Archivo Black';margin:35px 0 15px}.footer-statement p{color:#777}.footer-columns{display:grid;grid-template-columns:repeat(3,1fr);gap:30px}.footer-columns div{display:flex;flex-direction:column;gap:11px}.footer-columns h3{font:11px 'Archivo Black';color:#d9f24f;letter-spacing:1px;margin-bottom:10px}.footer-columns a{color:#aaa;text-decoration:none;font-size:13px}.footer-columns a:hover{color:#fff}.footer-bottom{border-top:1px solid #333;padding-top:22px;color:#777;display:flex;justify-content:space-between;font-size:9px;letter-spacing:1px}
-@media(max-width:1000px){.home-hero{grid-template-columns:1fr}.hero-image-wrap{min-height:560px}.home-vibe-grid{grid-template-columns:repeat(2,1fr)}.how-section{grid-template-columns:1fr}.home-section-head{grid-template-columns:1fr;gap:25px}}
-@media(max-width:700px){.home-hero{min-height:0}.hero-copy-block{padding:65px 22px 50px}.hero-copy-block h1{font-size:52px;letter-spacing:-3px}.hero-actions{align-items:flex-start;flex-direction:column}.hero-proof{gap:5px}.hero-proof div{padding-left:8px}.hero-image-wrap{min-height:400px;padding:30px}.sticker-one{width:75px;height:75px;right:15px;top:20px;font-size:9px}.sticker-two{width:68px;height:68px;left:15px;bottom:25px;font-size:9px}.vibes-section{padding:75px 18px}.home-section-head h2,.how-intro h2{letter-spacing:-2px}.home-vibe-grid{grid-template-columns:1fr}.home-vibe-card{min-height:350px}.how-section{padding:75px 20px}.how-steps article{grid-template-columns:44px 65px 1fr;gap:12px}.how-steps img{width:60px;height:60px}.cta-banner{padding:55px 22px;align-items:flex-start;flex-direction:column;gap:35px}.footer-top{grid-template-columns:1fr;gap:50px}.footer-columns{gap:16px}.footer-bottom{gap:20px}}
+@import url("https://fonts.googleapis.com/css2?family=Archivo+Black&family=DM+Sans:wght@400;500;600;700&display=swap");
+
+/* ---------- Brand colors ---------- */
+
+:root {
+  --black: #11110f;
+  --cream: #f5f1e8;
+  --white: #fffdf8;
+  --red: #ef3b2d;
+  --lime: #d9f24f;
+  --gray: #777168;
+  --border-color: #d9d4c9;
+}
+
+/* ---------- Basic page setup ---------- */
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.home-page {
+  margin: 0;
+  background-color: var(--cream);
+  color: var(--black);
+  font-family: "DM Sans", sans-serif;
+}
+
+.home-page h1,
+.home-page h2,
+.home-page h3,
+.home-page p {
+  margin-top: 0;
+}
+
+/* ---------- Shared buttons ---------- */
+
+.primary-button,
+.light-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 35px;
+  padding: 17px 20px;
+  background-color: var(--red);
+  color: white;
+  box-shadow: 6px 6px 0 var(--lime);
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.primary-button:hover {
+  color: white;
+  transform: translate(-2px, -2px);
+  box-shadow: 8px 8px 0 var(--lime);
+}
+
+/* ---------- Home hero ---------- */
+
+.home-hero {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  min-height: 690px;
+  overflow: hidden;
+  background-color: var(--black);
+  color: white;
+}
+
+.hero-copy-block {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 86px 7vw 60px 6vw;
+}
+
+.hero-copy-block h1 {
+  margin: 0 0 28px;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 76px;
+  line-height: 0.9;
+  letter-spacing: -4px;
+}
+
+.hero-copy-block h1 span {
+  color: var(--lime);
+}
+
+.hero-copy-block > p:not(.eyebrow) {
+  max-width: 590px;
+  color: #b7b4ac;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 18px 0 50px;
+}
+
+.text-link {
+  padding-bottom: 4px;
+  border-bottom: 1px solid #777;
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+/* The three small facts below the main button. */
+.hero-proof {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  max-width: 590px;
+  padding-top: 22px;
+  border-top: 1px solid #3e3d38;
+}
+
+.hero-proof div {
+  padding-left: 18px;
+  border-right: 1px solid #3e3d38;
+}
+
+.hero-proof div:first-child {
+  padding-left: 0;
+}
+
+.hero-proof div:last-child {
+  border-right: 0;
+}
+
+.hero-proof strong,
+.hero-proof small {
+  display: block;
+}
+
+.hero-proof strong {
+  font-family: "Archivo Black", sans-serif;
+  font-size: 13px;
+}
+
+.hero-proof small {
+  margin-top: 4px;
+  color: #888;
+  font-size: 10px;
+}
+
+/* ---------- Hero image side ---------- */
+
+.hero-image-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  padding: 60px;
+  background-color: var(--lime);
+}
+
+.hero-image-wrap img {
+  width: 100%;
+  max-width: 680px;
+  transform: rotate(-2deg);
+}
+
+.hero-image-wrap > p {
+  position: absolute;
+  right: 28px;
+  bottom: 22px;
+  margin: 0;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 11px;
+  letter-spacing: 2px;
+  writing-mode: vertical-rl;
+}
+
+/* Stickers are the round labels placed on top of the image. */
+.sticker {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  text-align: center;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 12px;
+  line-height: 1.1;
+}
+
+.sticker-one {
+  top: 50px;
+  right: 40px;
+  width: 105px;
+  height: 105px;
+  border: 3px solid var(--black);
+  background-color: var(--red);
+  color: white;
+  box-shadow: 5px 5px 0 var(--black);
+  transform: rotate(-10deg);
+}
+
+.sticker-two {
+  bottom: 60px;
+  left: 30px;
+  width: 92px;
+  height: 92px;
+  border: 2px solid var(--black);
+  background-color: white;
+  color: var(--black);
+  transform: rotate(8deg);
+}
+
+/* ---------- Moving category strip ---------- */
+
+.ticker {
+  overflow: hidden;
+  padding: 15px 0;
+  background-color: var(--red);
+  color: white;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 13px;
+  letter-spacing: 2px;
+  white-space: nowrap;
+}
+
+.ticker div {
+  width: max-content;
+  animation: move-ticker 18s linear infinite;
+}
+
+.ticker span {
+  margin: 0 25px;
+  color: var(--lime);
+}
+
+@keyframes move-ticker {
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+/* ---------- "Pick your vibe" section ---------- */
+
+.vibes-section {
+  max-width: 1600px;
+  margin: auto;
+  padding: 100px 5vw 115px;
+}
+
+.home-section-head {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  align-items: end;
+  margin-bottom: 40px;
+}
+
+.home-section-head h2,
+.how-intro h2 {
+  margin: 0;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 62px;
+  line-height: 0.95;
+  letter-spacing: -3px;
+}
+
+.home-section-head h2 span,
+.how-intro h2 span {
+  color: var(--red);
+}
+
+.home-section-head > p {
+  color: var(--gray);
+  font-size: 14px;
+  line-height: 1.65;
+}
+
+.home-vibe-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 13px;
+}
+
+.home-vibe-card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-height: 410px;
+  overflow: hidden;
+  padding: 28px;
+  border: 2px solid var(--black);
+  color: var(--black);
+  text-decoration: none;
+}
+
+.home-vibe-card:hover {
+  color: var(--black);
+  transform: translateY(-8px);
+  box-shadow: 8px 8px 0 var(--black);
+}
+
+.home-vibe-card.gaming {
+  background-color: var(--lime);
+}
+
+.home-vibe-card.movies {
+  background-color: var(--red);
+  color: white;
+}
+
+.home-vibe-card.movies:hover {
+  color: white;
+}
+
+.home-vibe-card.sports {
+  background-color: #8ac8ef;
+}
+
+.home-vibe-card.study {
+  background-color: #f4b6d3;
+}
+
+.vibe-icon {
+  margin-bottom: auto;
+  font-size: 46px;
+}
+
+.home-vibe-card small {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 2px;
+}
+
+.home-vibe-card h3 {
+  margin: 8px 0 14px;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 40px;
+  line-height: 0.9;
+  letter-spacing: -2px;
+}
+
+.home-vibe-card p {
+  max-width: 190px;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.home-vibe-card b {
+  width: max-content;
+  margin-top: 15px;
+  padding-bottom: 3px;
+  border-bottom: 2px solid currentColor;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+.home-vibe-card em {
+  position: absolute;
+  right: -3px;
+  bottom: -22px;
+  opacity: 0.09;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 100px;
+  font-style: normal;
+}
+
+/* ---------- How it works section ---------- */
+
+.how-section {
+  display: grid;
+  grid-template-columns: 0.8fr 1.2fr;
+  gap: 8vw;
+  padding: 100px 6vw;
+  background-color: var(--white);
+}
+
+.how-intro .primary-button {
+  margin-top: 35px;
+}
+
+.how-steps article {
+  display: grid;
+  grid-template-columns: 60px 95px 1fr;
+  align-items: center;
+  gap: 24px;
+  padding: 25px 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.how-steps article > span {
+  color: #c7c1b6;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 28px;
+}
+
+.how-steps img {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.how-steps h3 {
+  margin-bottom: 7px;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 18px;
+}
+
+.how-steps p {
+  margin: 0;
+  color: var(--gray);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+/* ---------- Final call to action ---------- */
+
+.cta-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 70px 7vw;
+  background-color: var(--red);
+  color: white;
+}
+
+.cta-banner .eyebrow {
+  color: var(--lime);
+}
+
+.cta-banner h2 {
+  margin: 0;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 62px;
+  line-height: 0.95;
+  letter-spacing: -3px;
+}
+
+.light-button {
+  padding: 20px 25px;
+  background-color: white;
+  color: var(--black);
+  box-shadow: 7px 7px 0 var(--black);
+}
+
+.light-button:hover {
+  color: var(--black);
+}
+
+/* ---------- Footer ---------- */
+
+.home-footer {
+  padding: 70px 6vw 25px;
+  background-color: var(--black);
+  color: white;
+}
+
+.footer-top {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr;
+  gap: 80px;
+  padding-bottom: 70px;
+}
+
+.footer-statement .pack-logo {
+  color: white;
+}
+
+.footer-statement h2 {
+  margin: 35px 0 15px;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 37px;
+  line-height: 0.95;
+}
+
+.footer-statement p {
+  color: #777;
+}
+
+.footer-columns {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 30px;
+}
+
+.footer-columns div {
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.footer-columns h3 {
+  margin-bottom: 10px;
+  color: var(--lime);
+  font-family: "Archivo Black", sans-serif;
+  font-size: 11px;
+  letter-spacing: 1px;
+}
+
+.footer-columns a {
+  color: #aaa;
+  font-size: 13px;
+  text-decoration: none;
+}
+
+.footer-columns a:hover {
+  color: white;
+}
+
+.footer-bottom {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 22px;
+  border-top: 1px solid #333;
+  color: #777;
+  font-size: 9px;
+  letter-spacing: 1px;
+}
+
+/* ---------- Tablet styles ---------- */
+
+@media (max-width: 1000px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-image-wrap {
+    min-height: 560px;
+  }
+
+  .home-vibe-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .how-section {
+    grid-template-columns: 1fr;
+  }
+
+  .home-section-head {
+    grid-template-columns: 1fr;
+    gap: 25px;
+  }
+}
+
+/* ---------- Mobile styles ---------- */
+
+@media (max-width: 700px) {
+  .home-hero {
+    min-height: 0;
+  }
+
+  .hero-copy-block {
+    padding: 65px 22px 50px;
+  }
+
+  .hero-copy-block h1 {
+    font-size: 52px;
+    letter-spacing: -3px;
+  }
+
+  .hero-actions {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .hero-proof {
+    gap: 5px;
+  }
+
+  .hero-proof div {
+    padding-left: 8px;
+  }
+
+  .hero-image-wrap {
+    min-height: 400px;
+    padding: 30px;
+  }
+
+  .sticker-one {
+    top: 20px;
+    right: 15px;
+    width: 75px;
+    height: 75px;
+    font-size: 9px;
+  }
+
+  .sticker-two {
+    bottom: 25px;
+    left: 15px;
+    width: 68px;
+    height: 68px;
+    font-size: 9px;
+  }
+
+  .vibes-section {
+    padding: 75px 18px;
+  }
+
+  .home-section-head h2,
+  .how-intro h2,
+  .cta-banner h2 {
+    font-size: 42px;
+    letter-spacing: -2px;
+  }
+
+  .home-vibe-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .home-vibe-card {
+    min-height: 350px;
+  }
+
+  .how-section {
+    padding: 75px 20px;
+  }
+
+  .how-steps article {
+    grid-template-columns: 44px 65px 1fr;
+    gap: 12px;
+  }
+
+  .how-steps img {
+    width: 60px;
+    height: 60px;
+  }
+
+  .cta-banner {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 35px;
+    padding: 55px 22px;
+  }
+
+  .footer-top {
+    grid-template-columns: 1fr;
+    gap: 50px;
+  }
+
+  .footer-columns {
+    gap: 16px;
+  }
+
+  .footer-bottom {
+    gap: 20px;
+  }
+}
