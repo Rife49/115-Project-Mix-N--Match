@@ -7,7 +7,9 @@
   <title>Build Your Pack | Variety Co.</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
-  <link rel="stylesheet" href="css/build-pack.css">
+  <!-- This version number makes browsers reload the newest card-image styles. -->
+  <link rel="stylesheet" href="css/build-pack.css?v=product-card-images-6">
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body class="pack-page">
   <div class="announcement">FREE SHIPPING ON PACKS $59+ <span>•</span> MIX IT. MATCH IT. MAKE IT YOURS.</div>
@@ -17,12 +19,12 @@
     <div class="pack-nav-links" aria-label="Main navigation">
       <a href="index.html">Home</a>
       <a class="active" href="build-pack.html">Build Your Pack</a>
-      <a href="#">Shop All</a>
-      <a href="#">About Us</a>
+      <a href="about-us.html">About Us</a>
+      <a href="account.html">Sign In</a>
     </div>
     <div class="pack-nav-actions">
-      <button type="button" aria-label="Search">⌕</button>
-      <button type="button" aria-label="Shopping bag">Bag <span class="bag-count">0</span></button>
+      <a class="mobile-account-link" href="account.html">Sign In</a>
+      <button type="button" aria-label="Shopping bag">Bag <span class="bag-count" data-cart-count>0</span></button>
     </div>
   </nav>
 
@@ -59,7 +61,7 @@
             <input type="radio" name="pack-size">
             <span class="choice-dot"></span>
             <span class="box-visual box-twelve"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            <strong>THE DOZEN</strong><small>12 items</small><b>$42.00</b>
+            <strong>THE DOZEN</strong><small>12 items</small><b>$44.00</b>
             <em>BEST VALUE</em>
           </label>
           <label class="size-card">
@@ -73,7 +75,7 @@
 
         <div class="section-heading vibe-heading">
           <div><span class="section-number">02</span><p class="eyebrow">SET THE MOOD</p><h2>What's your vibe?</h2></div>
-          <p>Choose one or skip it and browse everything.</p>
+          <p>Choose a vibe to load a starter pack, then change anything you want.</p>
         </div>
 
         <div class="vibe-grid">
@@ -90,38 +92,35 @@
         </div>
 
         <div class="product-toolbar">
-          <div class="category-tabs" role="tablist">
-            <button class="active" type="button">All goodies</button><button type="button">Drinks</button><button type="button">Snacks</button><button type="button">Sweet</button>
-          </div>
-          <button class="filter-button" type="button">☷ Filters <span>2</span></button>
+          <p class="product-selection-help">
+            Choose a vibe for six starter picks. Use + to add and − to remove.
+          </p>
         </div>
 
-        <div class="product-grid">
-          <article class="product-card"><span class="product-tag hot">FAN FAVORITE</span><div class="product-art can purple">ZAP<small>GRAPE RUSH</small></div><div class="product-info"><p>Energy drink</p><h3>Grape Rush</h3><span>Zero sugar · 12 oz</span><button type="button" aria-label="Add Grape Rush">+</button></div></article>
-          <article class="product-card"><span class="product-tag">NEW</span><div class="product-art chips orange">CRNCH<small>FIERY LIME</small></div><div class="product-info"><p>Spicy chips</p><h3>Fiery Lime Crunch</h3><span>Bold heat · 2.5 oz</span><button type="button" aria-label="Add Fiery Lime Crunch">+</button></div></article>
-          <article class="product-card"><div class="product-art bottle blue">DRIP<small>BLUE RASPBERRY</small></div><div class="product-info"><p>Hydration</p><h3>Blue Raspberry</h3><span>Electrolytes · 16 oz</span><button type="button" aria-label="Add Blue Raspberry">+</button></div></article>
-          <article class="product-card"><span class="product-tag vegan">VEGAN</span><div class="product-art pouch pink">CHEWS<small>SOUR BERRY</small></div><div class="product-info"><p>Gummy candy</p><h3>Sour Berry Bites</h3><span>Plant-based · 3 oz</span><button type="button" aria-label="Add Sour Berry Bites">+</button></div></article>
-          <article class="product-card"><div class="product-art bar brown">LEVEL<small>PB CRUNCH</small></div><div class="product-info"><p>Protein bar</p><h3>Peanut Butter Crunch</h3><span>18g protein · 2 oz</span><button type="button" aria-label="Add Peanut Butter Crunch">+</button></div></article>
-          <article class="product-card"><span class="product-tag">NEW</span><div class="product-art can green">POP<small>KIWI LIME</small></div><div class="product-info"><p>Sparkling water</p><h3>Kiwi Lime Pop</h3><span>Zero calories · 12 oz</span><button type="button" aria-label="Add Kiwi Lime Pop">+</button></div></article>
+        <div class="product-grid" data-build-product-list>
+          <!-- app.js creates one product card for every product in mock-data.js. -->
         </div>
       </div>
 
       <aside class="pack-summary">
         <div class="summary-head"><p class="eyebrow">YOUR BOX</p><span>0 / 6</span></div>
-        <h2>The Six</h2>
+        <h2 data-pack-name>The Six</h2>
         <p class="summary-sub">Game On pack</p>
         <div class="empty-box"><div class="box-lid"></div><div class="box-body"><span>YOUR MIX<br>GOES HERE</span></div></div>
         <h3>Your pack is waiting.</h3>
         <p>Add 6 favorites to unlock your perfect mix.</p>
         <div class="summary-progress"><span></span></div>
-        <div class="summary-row"><span>6-item pack</span><strong>$24.00</strong></div>
+        <div class="summary-row"><span data-pack-summary-name>6-item pack</span><strong data-pack-summary-price>$24.00</strong></div>
         <div class="summary-row muted"><span>Shipping</span><span>Calculated at checkout</span></div>
         <button class="checkout-button" type="button" disabled>ADD 6 MORE ITEMS</button>
-        <small class="summary-note">✓ Satisfaction guaranteed &nbsp; ✓ Ships in 1–2 days</small>
+        <small class="summary-note">✓ Satisfaction guaranteed &nbsp; ✓ Ships in 1–2 business days</small>
       </aside>
     </section>
   </main>
 
   <footer class="builder-footer"><a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a><p>Your favorites. Your pack. Your way.</p><span>© 2026 Variety Co.</span></footer>
+  <script src="mock-data.js"></script>
+  <script type="module" src="firebase-client.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="View the items saved in your Variety Co. demo cart.">
+  <title>Your Cart | Variety Co.</title>
+  <link rel="stylesheet" href="css/build-pack.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body class="utility-page">
+  <div class="announcement">
+    FREE SHIPPING ON PACKS $59+
+    <span>&bull;</span>
+    MIX IT. MATCH IT. MAKE IT YOURS.
+  </div>
+
+  <nav class="pack-nav">
+    <a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a>
+
+    <div class="pack-nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="build-pack.html">Build Your Pack</a>
+      <a href="about-us.html">About Us</a>
+      <a href="account.html">Sign In</a>
+    </div>
+
+    <div class="pack-nav-actions">
+      <a class="mobile-account-link" href="account.html">Sign In</a>
+      <button type="button" aria-label="Shopping bag">
+        Bag <span class="bag-count" data-cart-count>0</span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- The cart starts empty. app.js writes saved cart items into this page. -->
+    <section class="utility-introduction">
+      <p class="eyebrow">YOUR SAVED PACK</p>
+      <h1>YOUR <span>CART.</span></h1>
+      <p>
+        Shopping as <strong data-active-user-name>Guest</strong>. Your cart
+        is saved locally until Firebase is connected, then it is also saved online.
+      </p>
+    </section>
+
+    <section class="cart-layout">
+      <div class="cart-items" data-cart-items>
+        <!-- app.js places cart rows here. -->
+      </div>
+
+      <aside class="cart-summary">
+        <p class="eyebrow">ORDER SUMMARY</p>
+        <p class="cart-summary-count" data-cart-item-total>0 items</p>
+        <div class="cart-total-row">
+          <span data-cart-pack-name>Selected pack</span>
+          <strong data-cart-total>$0.00</strong>
+        </div>
+        <p class="cart-note">
+          This is a practice checkout. It accepts only the test card shown in
+          the payment window and never charges real money.
+        </p>
+        <button type="button" data-start-fake-checkout>
+          CHECK OUT WITH TEST CARD
+        </button>
+        <button type="button" class="clear-cart-button" data-clear-cart>
+          CLEAR CART
+        </button>
+        <a href="build-pack.html">BUILD YOUR PACK &rarr;</a>
+      </aside>
+    </section>
+  </main>
+
+  <!-- This payment window is a learning-only simulator. It never processes real cards. -->
+  <section
+    class="fake-checkout-modal"
+    data-fake-checkout-modal
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="fake-checkout-title"
+    hidden
+  >
+    <div class="fake-checkout-panel">
+      <button
+        class="fake-checkout-close"
+        type="button"
+        data-close-fake-checkout
+        aria-label="Close practice checkout"
+      >
+        &times;
+      </button>
+
+      <div data-fake-payment-form-area>
+        <p class="eyebrow">PRACTICE CHECKOUT</p>
+        <h2 id="fake-checkout-title">PAY WITH A<br><span>TEST CARD.</span></h2>
+        <p class="demo-payment-notice">
+          Do not enter a real card. These fields accept only the test values
+          already shown, and their contents are never saved or sent anywhere.
+        </p>
+
+        <div class="fake-payment-total">
+          <span data-payment-pack-name>Selected pack</span>
+          <strong data-payment-total>$0.00</strong>
+        </div>
+
+        <form data-fake-payment-form autocomplete="off">
+          <label for="demo-card-number">
+            TEST CARD NUMBER
+            <input
+              id="demo-card-number"
+              type="text"
+              inputmode="numeric"
+              value="4242 4242 4242 4242"
+              maxlength="19"
+              data-demo-card-number
+              aria-describedby="demo-card-help"
+              required
+            >
+          </label>
+          <small id="demo-card-help">
+            Use 4242 4242 4242 4242 only.
+          </small>
+
+          <div class="fake-payment-row">
+            <label for="demo-card-expiry">
+              TEST EXPIRY
+              <input
+                id="demo-card-expiry"
+                type="text"
+                inputmode="numeric"
+                value="12/34"
+                maxlength="5"
+                data-demo-card-expiry
+                required
+              >
+            </label>
+
+            <label for="demo-card-cvc">
+              TEST CVC
+              <input
+                id="demo-card-cvc"
+                type="text"
+                inputmode="numeric"
+                value="123"
+                maxlength="3"
+                data-demo-card-cvc
+                required
+              >
+            </label>
+          </div>
+
+          <p class="fake-payment-error" data-fake-payment-error hidden></p>
+
+          <button type="submit" data-complete-fake-payment>
+            PAY TEST ORDER
+          </button>
+        </form>
+      </div>
+
+      <div class="fake-payment-success" data-fake-payment-success hidden>
+        <p class="eyebrow">TEST PAYMENT APPROVED</p>
+        <h2>YOU'RE<br><span>ALL SET.</span></h2>
+        <p>
+          Your pretend payment of <strong data-successful-payment-total>$0.00</strong>
+          was approved. Your fake order number is
+          <strong data-successful-payment-order>DEMO-0000</strong>.
+        </p>
+        <p class="demo-payment-notice">
+          No money moved, and no card details were saved.
+        </p>
+        <a href="index.html">CONTINUE SHOPPING &rarr;</a>
+        <button type="button" data-close-fake-checkout>
+          CLOSE RECEIPT
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <footer class="builder-footer">
+    <a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a>
+    <p>Your favorites. Your pack. Your way.</p>
+    <span>&copy; 2026 Variety Co.</span>
+  </footer>
+
+  <script src="mock-data.js"></script>
+  <script type="module" src="firebase-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

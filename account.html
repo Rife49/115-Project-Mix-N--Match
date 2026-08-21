@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta
+    name="description"
+    content="Sign in to save previously bought Variety Co. products and build a quick reorder box."
+  >
+  <title>Sign In | Variety Co.</title>
+  <link rel="stylesheet" href="css/build-pack.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+<body class="utility-page">
+  <div class="announcement">
+    FREE SHIPPING ON PACKS $59+
+    <span>&bull;</span>
+    MIX IT. MATCH IT. MAKE IT YOURS.
+  </div>
+
+  <!-- Main navigation -->
+  <nav class="pack-nav">
+    <a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a>
+
+    <div class="pack-nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="build-pack.html">Build Your Pack</a>
+      <a href="about-us.html">About Us</a>
+      <a class="active" href="account.html">Sign In</a>
+    </div>
+
+    <div class="pack-nav-actions">
+      <a class="mobile-account-link" href="account.html">Sign In</a>
+      <button type="button" aria-label="Shopping bag">
+        Bag <span class="bag-count" data-cart-count>0</span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- The sign-in view stays focused on one simple action. -->
+    <section class="account-sign-in-section" data-account-sign-in-area>
+      <div class="account-sign-in-card">
+        <p class="eyebrow">YOUR ACCOUNT</p>
+        <h1>KEEP YOUR<br><span>FAVORITES CLOSE.</span></h1>
+        <p class="account-intro-copy">
+          Sign in to save products you bought before and build a ready-to-go
+          box for the next time you want the same favorites.
+        </p>
+
+        <form data-account-sign-in-form>
+          <label for="account-name">
+            YOUR NAME
+            <input
+              id="account-name"
+              type="text"
+              autocomplete="name"
+              data-account-name-input
+              required
+            >
+          </label>
+
+          <label for="account-email">
+            EMAIL ADDRESS
+            <input
+              id="account-email"
+              type="email"
+              autocomplete="email"
+              data-account-email-input
+              required
+            >
+          </label>
+
+          <button type="submit">SIGN IN</button>
+        </form>
+
+        <p class="account-form-note">
+          Learning version: your name and email are saved only in this browser.
+          No password is collected.
+        </p>
+      </div>
+    </section>
+
+    <!-- JavaScript reveals this calmer reorder view after sign-in. -->
+    <section class="account-dashboard" data-account-dashboard hidden>
+      <div class="account-dashboard-heading">
+        <div>
+          <p class="eyebrow">WELCOME BACK</p>
+          <h1><span data-account-name>Friend</span>, YOUR FAVORITES.</h1>
+          <p>
+            Add past products to your Quick Box, make changes, then check out
+            without building a pack from the beginning.
+          </p>
+        </div>
+        <button type="button" class="account-sign-out" data-account-sign-out>
+          SIGN OUT
+        </button>
+      </div>
+
+      <div class="account-dashboard-grid">
+        <section class="account-history-section">
+          <div class="account-section-heading">
+            <div>
+              <p class="eyebrow">SAVED FROM CHECKOUT</p>
+              <h2>PREVIOUSLY BOUGHT</h2>
+            </div>
+            <p>
+              Add a favorite to your Quick Box, or delete it from this saved
+              list when you no longer want to see it here.
+            </p>
+          </div>
+
+          <div class="account-product-list" data-previously-bought-list>
+            <!-- app.js places previously bought products here. -->
+          </div>
+        </section>
+
+        <aside class="quick-box-panel">
+          <p class="eyebrow">READY TO GO</p>
+          <div class="quick-box-title-row">
+            <h2>QUICK BOX</h2>
+            <strong data-quick-box-count>0 / 6</strong>
+          </div>
+          <p class="quick-box-status" data-quick-box-status></p>
+
+          <div class="quick-box-list" data-quick-box-list>
+            <!-- app.js places quick-box products here. -->
+          </div>
+
+          <button type="button" data-go-to-quick-checkout disabled>
+            ADD 6 MORE PRODUCTS
+          </button>
+          <p class="quick-box-note">
+            Fill the box to match your selected pack size before checkout.
+          </p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="builder-footer">
+    <a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a>
+    <p>Your favorites. Your pack. Your way.</p>
+    <span>&copy; 2026 Variety Co.</span>
+  </footer>
+
+  <script src="mock-data.js"></script>
+  <script type="module" src="firebase-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

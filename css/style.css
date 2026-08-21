@@ -657,3 +657,164 @@ html {
     gap: 20px;
   }
 }
+
+
+/* ---------- Extra small-screen layout improvements ---------- */
+
+@media (max-width: 1000px) {
+  .hero-copy-block {
+    padding: 72px 8vw 60px;
+  }
+
+  .hero-copy-block h1 {
+    font-size: 64px;
+  }
+
+  .hero-image-wrap {
+    min-height: 460px;
+    padding: 45px;
+  }
+
+  .vibes-section {
+    padding: 80px 5vw 90px;
+  }
+
+  .home-section-head h2,
+  .how-intro h2,
+  .cta-banner h2 {
+    font-size: 54px;
+  }
+
+  .how-section {
+    gap: 50px;
+    padding: 80px 6vw;
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-copy-block {
+    padding: 65px 22px 50px;
+  }
+
+  .hero-copy-block h1 {
+    font-size: 52px;
+    letter-spacing: -3px;
+  }
+
+  .home-section-head h2,
+  .how-intro h2,
+  .cta-banner h2 {
+    font-size: 42px;
+    letter-spacing: -2px;
+  }
+
+  .how-section {
+    padding: 75px 20px;
+  }
+
+  .primary-button,
+  .light-button {
+    width: 100%;
+    max-width: 310px;
+    gap: 20px;
+  }
+
+  .hero-actions {
+    width: 100%;
+    gap: 22px;
+    margin-bottom: 38px;
+  }
+
+  .hero-proof {
+    width: 100%;
+  }
+
+  .hero-proof div {
+    min-width: 0;
+  }
+
+  .hero-proof strong {
+    font-size: 11px;
+  }
+
+  .hero-proof small {
+    font-size: 9px;
+  }
+
+  .hero-image-wrap {
+    min-height: 330px;
+  }
+
+  .hero-image-wrap > p {
+    display: none;
+  }
+
+  .ticker {
+    font-size: 10px;
+    letter-spacing: 1px;
+  }
+
+  .home-vibe-card {
+    min-height: 310px;
+  }
+
+  .home-vibe-card h3 {
+    font-size: 36px;
+  }
+
+  .how-steps article {
+    grid-template-columns: 35px 56px minmax(0, 1fr);
+  }
+
+  .how-steps article > span {
+    font-size: 22px;
+  }
+
+  .how-steps img {
+    width: 52px;
+    height: 52px;
+  }
+
+  .how-steps h3 {
+    font-size: 15px;
+  }
+
+  .footer-bottom {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 430px) {
+  .hero-copy-block h1 {
+    font-size: 45px;
+    letter-spacing: -2px;
+  }
+
+  .hero-copy-block > p:not(.eyebrow) {
+    font-size: 14px;
+  }
+
+  .hero-image-wrap {
+    min-height: 290px;
+    padding: 22px;
+  }
+
+  .hero-proof {
+    gap: 0;
+  }
+
+  .hero-proof div {
+    padding-left: 6px;
+  }
+
+  .home-section-head h2,
+  .how-intro h2,
+  .cta-banner h2 {
+    font-size: 36px;
+  }
+
+  .footer-columns {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}

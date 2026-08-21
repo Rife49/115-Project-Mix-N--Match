@@ -7,6 +7,7 @@
   <title>Variety Co. | Your Mix, Your Way</title>
   <link rel="stylesheet" href="css/style.css">
   <link rel="stylesheet" href="css/build-pack.css">
+  <link rel="stylesheet" href="css/app.css">
 </head>
 <body class="home-page">
   <div class="announcement">FREE SHIPPING ON PACKS $59+ <span>•</span> MIX IT. MATCH IT. MAKE IT YOURS.</div>
@@ -16,12 +17,12 @@
     <div class="pack-nav-links" aria-label="Main navigation">
       <a class="active" href="index.html">Home</a>
       <a href="build-pack.html">Build Your Pack</a>
-      <a href="#">Shop All</a>
-      <a href="#">About Us</a>
+      <a href="about-us.html">About Us</a>
+      <a href="account.html">Sign In</a>
     </div>
     <div class="pack-nav-actions">
-      <button type="button" aria-label="Search">⌕</button>
-      <button type="button" aria-label="Shopping bag">Bag <span class="bag-count">0</span></button>
+      <a class="mobile-account-link" href="account.html">Sign In</a>
+      <button type="button" aria-label="Shopping bag">Bag <span class="bag-count" data-cart-count>0</span></button>
     </div>
   </nav>
 
@@ -86,5 +87,8 @@
     <div class="footer-top"><div class="footer-statement"><a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a><h2>GOOD STUFF.<br>YOUR WAY.</h2><p>Your favorites. Your pack. Your vibe.</p></div><div class="footer-columns"><div><h3>SHOP</h3><a href="build-pack.html">Build a Pack</a><a href="#">Drinks</a><a href="#">Snacks</a></div><div><h3>HELP</h3><a href="#">FAQ</a><a href="#">Shipping</a><a href="#">Contact</a></div><div><h3>FOLLOW</h3><a href="#">Instagram</a><a href="#">TikTok</a><a href="#">YouTube</a></div></div></div>
     <div class="footer-bottom"><span>© 2026 VARIETY CO.</span><span>MADE FOR EVERY KIND OF VIBE.</span></div>
   </footer>
+  <script src="mock-data.js"></script>
+  <script type="module" src="firebase-client.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

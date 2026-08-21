@@ -1,0 +1,14 @@
+{
+  "name": "variety-co",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Firebase tools for the Variety Co. snack-pack project.",
+  "scripts": {
+    "firebase:login": "firebase login",
+    "firebase:emulators": "firebase emulators:start",
+    "firebase:deploy": "firebase deploy"
+  },
+  "devDependencies": {
+    "firebase-tools": "^14.0.0"
+  }
+}

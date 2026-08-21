@@ -1,0 +1,11 @@
+# Installed packages are recreated with npm install.
+node_modules/
+functions/node_modules/
+
+# Firebase creates these files while running or deploying.
+firebase-debug.log
+firebase-debug.*.log
+.firebaserc.local
+
+# Keep any personal editor files out of the project.
+.DS_Store

@@ -1,0 +1,434 @@
+/*
+  PRODUCT CATALOG DATA
+
+  These are real-brand product examples for the Variety Co. demo catalog.
+  Product availability, package sizes, and retail prices can change by store.
+  The price values below are learning examples only; the cart uses pack prices.
+
+  Each product now has an imagePath. It points to a local package photo in
+  images/products so the catalog can show the real product packaging. Before
+  selling publicly, replace these learning-preview images with licensed brand assets.
+*/
+
+const mockProducts = [
+  {
+    id: "ghost-energy-redberry",
+    imagePath: "images/products/ghost-energy-redberry.png",
+    brand: "GHOST",
+    name: "GHOST Energy Sour Patch Kids Redberry",
+    label: "GHOST",
+    subtitle: "REDBERRY",
+    category: "ENERGY DRINK",
+    description: "Energy drink • 16 fl oz",
+    price: 3.49,
+    colorClass: "pink-product",
+    artShape: "can",
+    artColor: "pink",
+    tag: "ENERGY",
+    tagClass: "hot"
+  },
+  {
+    id: "red-bull-original",
+    imagePath: "images/products/red-bull-original.jpg",
+    brand: "Red Bull",
+    name: "Red Bull Energy Drink",
+    label: "RB",
+    subtitle: "ORIGINAL",
+    category: "ENERGY DRINK",
+    description: "Original energy drink • 8.4 fl oz",
+    price: 2.99,
+    colorClass: "blue-product",
+    artShape: "can",
+    artColor: "blue",
+    tag: "CLASSIC",
+    tagClass: ""
+  },
+  {
+    id: "monster-energy-original",
+    imagePath: "images/products/monster-energy-original.jpg",
+    brand: "Monster Energy",
+    name: "Monster Energy Original",
+    label: "MONSTER",
+    subtitle: "ORIGINAL",
+    category: "ENERGY DRINK",
+    description: "Original energy drink • 16 fl oz",
+    price: 3.29,
+    colorClass: "green-product",
+    artShape: "can",
+    artColor: "green",
+    tag: "ENERGY",
+    tagClass: "hot"
+  },
+  {
+    id: "celsius-arctic-vibe",
+    imagePath: "images/products/celsius-arctic-vibe.jpg",
+    brand: "Celsius",
+    name: "Celsius Arctic Vibe",
+    label: "CELSIUS",
+    subtitle: "ARCTIC VIBE",
+    category: "ENERGY DRINK",
+    description: "Sparkling energy drink • 12 fl oz",
+    price: 2.99,
+    colorClass: "blue-product",
+    artShape: "can",
+    artColor: "blue",
+    tag: "COLD",
+    tagClass: ""
+  },
+  {
+    id: "alani-nu-breezeberry",
+    imagePath: "images/products/alani-nu-breezeberry.jpg",
+    brand: "Alani Nu",
+    name: "Alani Nu Breezeberry",
+    label: "ALANI",
+    subtitle: "BREEZEBERRY",
+    category: "ENERGY DRINK",
+    description: "Energy drink • 12 fl oz",
+    price: 2.99,
+    colorClass: "purple-product",
+    artShape: "can",
+    artColor: "purple",
+    tag: "ENERGY",
+    tagClass: ""
+  },
+  {
+    id: "prime-hydration-ice-pop",
+    imagePath: "images/products/prime-hydration-ice-pop.png",
+    brand: "PRIME",
+    name: "PRIME Hydration Ice Pop",
+    label: "PRIME",
+    subtitle: "ICE POP",
+    category: "HYDRATION",
+    description: "Hydration drink • 16.9 fl oz",
+    price: 2.79,
+    colorClass: "blue-product",
+    artShape: "bottle",
+    artColor: "blue",
+    tag: "HYDRATE",
+    tagClass: ""
+  },
+  {
+    id: "gatorade-zero-glacier-freeze",
+    imagePath: "images/products/gatorade-zero-glacier-freeze.jpg",
+    brand: "Gatorade",
+    name: "Gatorade Zero Glacier Freeze",
+    label: "G ZERO",
+    subtitle: "GLACIER",
+    category: "SPORTS DRINK",
+    description: "Sports drink • 20 fl oz",
+    price: 2.69,
+    colorClass: "blue-product",
+    artShape: "bottle",
+    artColor: "blue",
+    tag: "GAME DAY",
+    tagClass: "hot"
+  },
+  {
+    id: "liquid-death-mountain-water",
+    imagePath: "images/products/liquid-death-mountain-water.jpg",
+    brand: "Liquid Death",
+    name: "Liquid Death Mountain Water",
+    label: "DEATH",
+    subtitle: "MOUNTAIN",
+    category: "WATER",
+    description: "Canned mountain water • 19.2 fl oz",
+    price: 2.49,
+    colorClass: "teal-product",
+    artShape: "can",
+    artColor: "teal",
+    tag: "WATER",
+    tagClass: ""
+  },
+  {
+    id: "poppi-strawberry-lemon",
+    imagePath: "images/products/poppi-strawberry-lemon.jpg",
+    brand: "Poppi",
+    name: "Poppi Strawberry Lemon",
+    label: "POPPI",
+    subtitle: "STRAWBERRY",
+    category: "SODA",
+    description: "Sparkling soda • 12 fl oz",
+    price: 2.69,
+    colorClass: "pink-product",
+    artShape: "can",
+    artColor: "pink",
+    tag: "SIP",
+    tagClass: ""
+  },
+  {
+    id: "lacroix-limoncello",
+    imagePath: "images/products/lacroix-limoncello.jpg",
+    brand: "LaCroix",
+    name: "LaCroix LimonCello",
+    label: "LACROIX",
+    subtitle: "LIMONCELLO",
+    category: "SPARKLING WATER",
+    description: "Sparkling water • 12 fl oz",
+    price: 0.89,
+    colorClass: "yellow-product",
+    artShape: "can",
+    artColor: "yellow",
+    tag: "SPARKLING",
+    tagClass: ""
+  },
+  {
+    id: "doritos-nacho-cheese",
+    imagePath: "images/products/doritos-nacho-cheese.jpg",
+    brand: "Doritos",
+    name: "Doritos Nacho Cheese",
+    label: "DORITOS",
+    subtitle: "NACHO CHEESE",
+    category: "CHIPS",
+    description: "Tortilla chips • single serve",
+    price: 2.29,
+    colorClass: "orange-product",
+    artShape: "chips",
+    artColor: "orange",
+    tag: "SAVORY",
+    tagClass: "hot"
+  },
+  {
+    id: "cheetos-flamin-hot",
+    imagePath: "images/products/cheetos-flamin-hot.jpg",
+    brand: "Cheetos",
+    name: "Cheetos Flamin' Hot",
+    label: "CHEETOS",
+    subtitle: "FLAMIN' HOT",
+    category: "CHEESE SNACK",
+    description: "Crunchy cheese snack • single serve",
+    price: 2.29,
+    colorClass: "orange-product",
+    artShape: "chips",
+    artColor: "orange",
+    tag: "SPICY",
+    tagClass: "hot"
+  },
+  {
+    id: "takis-fuego",
+    imagePath: "images/products/takis-fuego.jpg",
+    brand: "Takis",
+    name: "Takis Fuego",
+    label: "TAKIS",
+    subtitle: "FUEGO",
+    category: "ROLLED TORTILLA CHIPS",
+    description: "Spicy rolled tortilla chips • single serve",
+    price: 2.49,
+    colorClass: "purple-product",
+    artShape: "chips",
+    artColor: "purple",
+    tag: "SPICY",
+    tagClass: "hot"
+  },
+  {
+    id: "skinnypop-original",
+    imagePath: "images/products/skinnypop-original.jpg",
+    brand: "SkinnyPop",
+    name: "SkinnyPop Original Popcorn",
+    label: "SKINNY",
+    subtitle: "ORIGINAL",
+    category: "POPCORN",
+    description: "Popcorn • single serve",
+    price: 1.99,
+    colorClass: "teal-product",
+    artShape: "pouch",
+    artColor: "teal",
+    tag: "MOVIE",
+    tagClass: ""
+  },
+  {
+    id: "quest-nacho-cheese-chips",
+    imagePath: "images/products/quest-nacho-cheese-chips.jpg",
+    brand: "Quest",
+    name: "Quest Nacho Cheese Protein Chips",
+    label: "QUEST",
+    subtitle: "NACHO CHEESE",
+    category: "PROTEIN CHIPS",
+    description: "Protein chips • single serve",
+    price: 2.99,
+    colorClass: "orange-product",
+    artShape: "chips",
+    artColor: "orange",
+    tag: "PROTEIN",
+    tagClass: ""
+  },
+  {
+    id: "kind-dark-chocolate-nuts",
+    imagePath: "images/products/kind-dark-chocolate-nuts.png",
+    brand: "KIND",
+    name: "KIND Dark Chocolate Nuts & Sea Salt",
+    label: "KIND",
+    subtitle: "DARK CHOC",
+    category: "SNACK BAR",
+    description: "Nut and chocolate snack bar",
+    price: 2.29,
+    colorClass: "brown-product",
+    artShape: "bar",
+    artColor: "brown",
+    tag: "SNACK",
+    tagClass: ""
+  },
+  {
+    id: "sour-patch-kids-original",
+    imagePath: "images/products/sour-patch-kids-original.png",
+    brand: "Sour Patch Kids",
+    name: "Sour Patch Kids Original",
+    label: "SOUR",
+    subtitle: "PATCH KIDS",
+    category: "CANDY",
+    description: "Soft and chewy candy • single serve",
+    price: 1.99,
+    colorClass: "pink-product",
+    artShape: "pouch",
+    artColor: "pink",
+    tag: "SWEET",
+    tagClass: ""
+  },
+  {
+    id: "reeses-peanut-butter-cups",
+    imagePath: "images/products/reeses-peanut-butter-cups.jpg",
+    brand: "Reese's",
+    name: "Reese's Peanut Butter Cups",
+    label: "REESE'S",
+    subtitle: "PEANUT BUTTER",
+    category: "CANDY",
+    description: "Milk chocolate peanut butter cups",
+    price: 1.89,
+    colorClass: "orange-product",
+    artShape: "bar",
+    artColor: "orange",
+    tag: "SWEET",
+    tagClass: ""
+  },
+  {
+    id: "skittles-original",
+    imagePath: "images/products/skittles-original.png",
+    brand: "Skittles",
+    name: "Skittles Original",
+    label: "SKITTLES",
+    subtitle: "ORIGINAL",
+    category: "CANDY",
+    description: "Fruit-flavored chewy candy • single serve",
+    price: 1.79,
+    colorClass: "purple-product",
+    artShape: "pouch",
+    artColor: "purple",
+    tag: "SWEET",
+    tagClass: ""
+  },
+  {
+    id: "mms-peanut",
+    imagePath: "images/products/mms-peanut.jpg",
+    brand: "M&M'S",
+    name: "M&M'S Peanut",
+    label: "M&M'S",
+    subtitle: "PEANUT",
+    category: "CANDY",
+    description: "Milk chocolate candy with peanuts",
+    price: 1.99,
+    colorClass: "yellow-product",
+    artShape: "pouch",
+    artColor: "yellow",
+    tag: "SWEET",
+    tagClass: ""
+  }
+];
+
+/*
+  Pack options hold the official price for each box size.
+  Both Build Your Pack and Cart read from this same object.
+*/
+
+const packOptions = {
+  6: {
+    name: "The Six",
+    itemCountLabel: "6-item pack",
+    price: 24
+  },
+  12: {
+    name: "The Dozen",
+    itemCountLabel: "12-item pack",
+    price: 44
+  },
+  18: {
+    name: "The Party Pack",
+    itemCountLabel: "18-item pack",
+    price: 59
+  }
+};
+
+/*
+  Each vibe has a six-item starter pack.
+  The IDs below must match product IDs from mockProducts.
+*/
+
+const vibePresets = {
+  "GAME ON": [
+    "ghost-energy-redberry",
+    "red-bull-original",
+    "quest-nacho-cheese-chips",
+    "takis-fuego",
+    "prime-hydration-ice-pop",
+    "cheetos-flamin-hot"
+  ],
+  "MOVIE NIGHT": [
+    "poppi-strawberry-lemon",
+    "skinnypop-original",
+    "sour-patch-kids-original",
+    "reeses-peanut-butter-cups",
+    "mms-peanut",
+    "doritos-nacho-cheese"
+  ],
+  "GAME DAY": [
+    "gatorade-zero-glacier-freeze",
+    "prime-hydration-ice-pop",
+    "red-bull-original",
+    "doritos-nacho-cheese",
+    "takis-fuego",
+    "liquid-death-mountain-water"
+  ],
+  "ALL-NIGHTER": [
+    "monster-energy-original",
+    "celsius-arctic-vibe",
+    "alani-nu-breezeberry",
+    "quest-nacho-cheese-chips",
+    "kind-dark-chocolate-nuts",
+    "lacroix-limoncello"
+  ],
+  "CHILL MODE": [
+    "liquid-death-mountain-water",
+    "poppi-strawberry-lemon",
+    "lacroix-limoncello",
+    "skinnypop-original",
+    "kind-dark-chocolate-nuts",
+    "mms-peanut"
+  ]
+};
+
+/*
+  These mock users let you practice changing the active user.
+  They are not real accounts and do not include a sign-in system.
+*/
+
+const mockUsers = [
+  {
+    id: "maya",
+    name: "Maya Davis",
+    email: "maya@variety-demo.com",
+    favoriteVibe: "Movie Night",
+    favoriteFlavor: "Sweet and Salty"
+  },
+  {
+    id: "jordan",
+    name: "Jordan Lee",
+    email: "jordan@variety-demo.com",
+    favoriteVibe: "Game On",
+    favoriteFlavor: "Spicy"
+  },
+  {
+    id: "alex",
+    name: "Alex Rivera",
+    email: "alex@variety-demo.com",
+    favoriteVibe: "Game Day",
+    favoriteFlavor: "Zero Sugar"
+  }
+];

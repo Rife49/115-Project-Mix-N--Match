@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Learn about Variety Co. and our customizable snack and drink packs.">
+  <title>About Us | Variety Co.</title>
+  <link rel="stylesheet" href="css/build-pack.css">
+  <link rel="stylesheet" href="css/about-us.css">
+  <link rel="stylesheet" href="css/app.css">
+</head>
+
+<body class="about-page">
+  <div class="announcement">
+    FREE SHIPPING ON PACKS $59+
+    <span>&bull;</span>
+    MIX IT. MATCH IT. MAKE IT YOURS.
+  </div>
+
+  <!-- Main navigation -->
+  <nav class="pack-nav">
+    <a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a>
+
+    <div class="pack-nav-links" aria-label="Main navigation">
+      <a href="index.html">Home</a>
+      <a href="build-pack.html">Build Your Pack</a>
+      <a class="active" href="about-us.html">About Us</a>
+      <a href="account.html">Sign In</a>
+    </div>
+
+    <div class="pack-nav-actions">
+      <a class="mobile-account-link" href="account.html">Sign In</a>
+      <button type="button" aria-label="Shopping bag">
+        Bag <span class="bag-count" data-cart-count>0</span>
+      </button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- A simple page title and introduction -->
+    <section class="about-introduction">
+      <p class="eyebrow">ABOUT VARIETY CO.</p>
+      <h1>SNACKS AND DRINKS,<br><span>CHOSEN BY YOU.</span></h1>
+      <p>
+        Variety Co. helps people make snack and drink packs around the things
+        they enjoy most: gaming, sports, movie nights, study sessions, and
+        everyday moments.
+      </p>
+    </section>
+
+    <!-- The main story section -->
+    <section class="about-story">
+      <div class="about-story-image">
+        <img
+          src="images/CustomBoxVarietyCo.png"
+          alt="A Variety Co. box filled with snacks and drinks"
+        >
+      </div>
+
+      <div class="about-story-text">
+        <p class="eyebrow">OUR STORY</p>
+        <h2>MADE FOR<br>YOUR MOMENT.</h2>
+        <p>
+          A regular snack box is chosen for you. We wanted to create something
+          more personal. With Variety Co., you can pick the products you want
+          and leave out the ones you do not.
+        </p>
+        <p>
+          Whether you need a quick energy boost, a movie-night treat, or a
+          better way to share snacks with friends, your pack starts with your
+          own taste.
+        </p>
+      </div>
+    </section>
+
+    <!-- Simple brand values -->
+    <section class="about-guides">
+      <div class="about-guides-heading">
+        <p class="eyebrow">WHAT GUIDES US</p>
+        <h2>KEEP IT<br>SIMPLE.</h2>
+      </div>
+
+      <div class="guide-list">
+        <article>
+          <span>01</span>
+          <div>
+            <h3>MORE CHOICE</h3>
+            <p>Choose the snacks, drinks, flavors, and pack size you want.</p>
+          </div>
+        </article>
+
+        <article>
+          <span>02</span>
+          <div>
+            <h3>MORE YOU</h3>
+            <p>Build around your interests, your tastes, and your day.</p>
+          </div>
+        </article>
+
+        <article>
+          <span>03</span>
+          <div>
+            <h3>MORE FUN</h3>
+            <p>Try new favorites and create combinations worth looking forward to.</p>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- A small closing section with one clear next step -->
+    <section class="about-closing">
+      <p class="eyebrow">READY WHEN YOU ARE</p>
+      <h2>MAKE A PACK<br>THAT FEELS LIKE YOU.</h2>
+      <a href="build-pack.html">
+        BUILD YOUR PACK <span>&rarr;</span>
+      </a>
+    </section>
+  </main>
+
+  <footer class="builder-footer">
+    <a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a>
+    <p>Your favorites. Your pack. Your way.</p>
+    <span>&copy; 2026 Variety Co.</span>
+  </footer>
+  <script src="mock-data.js"></script>
+  <script type="module" src="firebase-client.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

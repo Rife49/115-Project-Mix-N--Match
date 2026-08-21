@@ -1,0 +1,119 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+    /*
+      Products, box prices, and vibe presets are public store information.
+      Only Cloud Functions can change them.
+    */
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /packOptions/{packSize} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    match /vibePresets/{vibeId} {
+      allow read: if true;
+      allow write: if false;
+    }
+
+    /*
+      Every signed-in Firebase user can read and change only their own profile,
+      cart, and saved packs. The user ID in the URL must match the login ID.
+    */
+    match /users/{userId} {
+      allow get: if isThisUsersDocument(userId);
+      allow list: if false;
+      allow create: if isThisUsersDocument(userId)
+                    && isValidNewProfile(userId);
+      allow update: if isThisUsersDocument(userId)
+                    && isValidUpdatedProfile(userId);
+      allow delete: if false;
+
+      match /private/{privateDocumentId} {
+        allow read: if isThisUsersDocument(userId);
+        allow create, update: if isThisUsersDocument(userId)
+                              && privateDocumentId == "cart"
+                              && isValidCart(userId);
+        allow delete: if isThisUsersDocument(userId);
+      }
+
+      match /savedPacks/{savedPackId} {
+        allow read, create, update, delete: if isThisUsersDocument(userId);
+      }
+    }
+
+    /*
+      Orders are written by the Cloud Function after it checks the pack price
+      and product IDs. A customer can read only their own orders.
+    */
+    match /orders/{orderId} {
+      allow get, list: if request.auth != null
+                       && resource.data.userId == request.auth.uid;
+      allow create, update, delete: if false;
+    }
+
+    /*
+      This document is only for the server to remember whether the initial
+      catalog has been written. It is never visible to a visitor.
+    */
+    match /catalogMetadata/{documentId} {
+      allow read, write: if false;
+    }
+
+    /*
+      Everything not listed above is locked by default.
+    */
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    function isThisUsersDocument(userId) {
+      return request.auth != null && request.auth.uid == userId;
+    }
+
+    function isValidNewProfile(userId) {
+      return request.resource.data.keys().hasOnly([
+        "userId",
+        "email",
+        "isAnonymous",
+        "createdAt",
+        "lastSeenAt"
+      ])
+      && request.resource.data.userId == userId
+      && request.resource.data.email is string
+      && request.resource.data.isAnonymous is bool
+      && request.resource.data.createdAt is timestamp
+      && request.resource.data.lastSeenAt is timestamp;
+    }
+
+    function isValidUpdatedProfile(userId) {
+      return isValidNewProfile(userId)
+      && request.resource.data.createdAt == resource.data.createdAt;
+    }
+
+    function isValidCart(userId) {
+      return request.resource.data.keys().hasOnly([
+        "userId",
+        "productIds",
+        "packSize",
+        "selectedVibe",
+        "updatedAt"
+      ])
+      && request.resource.data.userId == userId
+      && request.resource.data.productIds is list
+      && request.resource.data.productIds.size() <= 18
+      && (
+        request.resource.data.packSize == 6
+        || request.resource.data.packSize == 12
+        || request.resource.data.packSize == 18
+      )
+      && request.resource.data.selectedVibe is string
+      && request.resource.data.updatedAt is timestamp;
+    }
+  }
+}

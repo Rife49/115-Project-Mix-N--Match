@@ -103,6 +103,21 @@
   gap: 9px;
 }
 
+/* This link keeps the Account page reachable on small screens. */
+.mobile-account-link {
+  display: none;
+  color: var(--ink);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.mobile-account-link:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
+}
+
 .pack-nav-actions button {
   padding: 9px;
   border: 0;
@@ -413,7 +428,7 @@
   color: #aaa;
 }
 
-/* ---------- Product filters and cards ---------- */
+/* ---------- Product cards ---------- */
 
 .fill-counter {
   padding: 9px 14px;
@@ -428,43 +443,17 @@
 }
 
 .product-toolbar {
-  display: flex;
-  justify-content: space-between;
   margin-bottom: 22px;
   padding: 13px 0;
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
 }
 
-.category-tabs {
-  display: flex;
-  gap: 5px;
-}
-
-.category-tabs button,
-.filter-button {
-  padding: 8px 14px;
-  border: 0;
-  background-color: transparent;
+.product-selection-help {
+  margin: 0;
+  color: #625e56;
   font-size: 12px;
-  font-weight: 700;
-}
-
-.category-tabs button.active {
-  background-color: var(--ink);
-  color: white;
-}
-
-.filter-button {
-  border: 1px solid var(--line);
-}
-
-.filter-button span {
-  margin-left: 4px;
-  padding: 1px 5px;
-  border-radius: 50%;
-  background-color: var(--red);
-  color: white;
+  line-height: 1.5;
 }
 
 .product-grid {
@@ -482,6 +471,16 @@
 
 .product-card:hover {
   border-color: #aaa49a;
+}
+
+/* A red border shows that this item is already in the editable pack. */
+.selected-product-card {
+  border: 2px solid var(--red);
+  box-shadow: 5px 5px 0 rgba(241, 59, 49, 0.18);
+}
+
+.selected-product-card:hover {
+  border-color: var(--red);
 }
 
 .product-tag {
@@ -505,17 +504,33 @@
   background-color: #b7e1b0;
 }
 
-/* These product shapes are placeholders until real product images are added. */
+/* Product photos use this same area.
+   CSS shapes are the backup when a photo is missing. */
 .product-art {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 190px;
-  margin: 20px auto 5px;
+  height: 150px;
+  margin: 12px auto 2px;
   color: white;
   font-family: "Archivo Black", sans-serif;
   box-shadow: 7px 9px 15px rgba(20, 20, 15, 0.15);
+}
+
+.product-photo {
+  padding: 0;
+  background-color: transparent;
+  box-shadow: none;
+}
+
+.product-image {
+  display: block;
+  width: 50%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  object-fit: contain;
 }
 
 .product-art small {
@@ -577,6 +592,14 @@
   background-color: #96603a;
 }
 
+.yellow {
+  background-color: #e9b62a;
+}
+
+.teal {
+  background-color: #188f89;
+}
+
 .product-info {
   position: relative;
   padding: 16px;
@@ -614,6 +637,16 @@
   background-color: var(--ink);
   color: white;
   font-size: 19px;
+}
+
+.selected-product-card .product-info button {
+  background-color: var(--red);
+}
+
+.product-info button:focus-visible,
+.vibe-card:focus-visible {
+  outline: 3px solid var(--lime);
+  outline-offset: 3px;
 }
 
 /* ---------- Pack summary on the right ---------- */
@@ -800,7 +833,12 @@
   }
 
   .pack-nav-actions {
+    align-items: center;
     margin-left: auto;
+  }
+
+  .mobile-account-link {
+    display: block;
   }
 
   .builder-hero {
@@ -855,14 +893,6 @@
     min-height: 210px;
   }
 
-  .product-toolbar {
-    align-items: flex-start;
-    gap: 10px;
-  }
-
-  .category-tabs {
-    flex-wrap: wrap;
-  }
 
   .builder-footer {
     flex-wrap: wrap;
@@ -872,5 +902,165 @@
   .builder-footer p {
     flex-basis: 100%;
     order: 3;
+  }
+}
+
+
+/* ---------- Responsive navigation and touch improvements ---------- */
+
+/* Tablet spacing keeps every navigation link on one line. */
+@media (max-width: 1100px) {
+  .pack-nav {
+    gap: 28px;
+    padding: 0 4vw;
+  }
+
+  .pack-nav-links {
+    gap: 22px;
+  }
+
+  .pack-nav-links a {
+    font-size: 13px;
+  }
+
+  .builder-hero {
+    gap: 45px;
+  }
+
+  .builder-hero h1 {
+    font-size: 62px;
+  }
+
+  .builder-shell {
+    gap: 38px;
+  }
+}
+
+/* Phone navigation wraps into a readable row instead of hiding page links. */
+@media (max-width: 720px) {
+  .announcement {
+    padding: 8px 14px;
+    font-size: 9px;
+    letter-spacing: 1px;
+    line-height: 1.45;
+  }
+
+  .announcement span {
+    margin: 0 7px;
+  }
+
+  .pack-nav {
+    flex-wrap: wrap;
+    gap: 10px;
+    min-height: 70px;
+    padding: 0 20px;
+  }
+
+  .pack-logo {
+    margin-right: auto;
+  }
+
+  .pack-nav-actions {
+    align-items: center;
+    margin-left: 0;
+  }
+
+  .pack-nav-actions button {
+    min-height: 44px;
+    padding: 10px 0 10px 9px;
+  }
+
+  .mobile-account-link {
+    display: none;
+  }
+
+  .pack-nav-links {
+    display: flex;
+    order: 3;
+    flex-basis: 100%;
+    gap: 20px;
+    padding: 0 0 12px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .pack-nav-links a {
+    flex: 0 0 auto;
+    padding: 5px 0;
+    font-size: 12px;
+  }
+
+  .pack-nav-links a.active::after {
+    bottom: -12px;
+  }
+
+  .builder-hero {
+    gap: 42px;
+  }
+
+  .builder-hero h1 {
+    font-size: 52px;
+    letter-spacing: -2px;
+  }
+
+  .steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .step strong {
+    font-size: 10px;
+  }
+
+  .vibe-card {
+    min-height: 125px;
+    padding: 16px 8px;
+  }
+
+  .product-info {
+    padding-right: 66px;
+  }
+
+  .product-info button {
+    width: 44px;
+    height: 44px;
+    right: 11px;
+    bottom: 11px;
+  }
+
+  .pack-summary {
+    max-width: none;
+    padding: 22px;
+  }
+
+  .builder-footer {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 430px) {
+  .pack-logo {
+    font-size: 21px;
+  }
+
+  .pack-nav-links {
+    gap: 16px;
+  }
+
+  .vibe-card strong {
+    font-size: 11px;
+  }
+}
+
+
+/* iPad portrait has room for the steps below the title. */
+@media (min-width: 721px) and (max-width: 900px) {
+  .builder-hero {
+    grid-template-columns: 1fr;
+    gap: 36px;
+    padding: 52px 5vw;
+  }
+
+  .steps {
+    max-width: 650px;
   }
 }
