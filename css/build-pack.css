@@ -118,24 +118,80 @@
   outline-offset: 3px;
 }
 
-.pack-nav-actions button {
-  padding: 9px;
-  border: 0;
-  background-color: transparent;
-  font-weight: 700;
+/* The Bag control uses the same pill shape and count badge on every page. */
+.bag-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  min-height: 46px;
+  padding: 9px 10px 9px 13px;
+  border: 1px solid var(--ink);
+  border-radius: 999px;
+  background-color: var(--paper);
+  box-shadow: 3px 3px 0 var(--ink);
+  color: var(--ink);
+  cursor: pointer;
+  font: inherit;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.9px;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+.bag-button:hover {
+  background-color: var(--lime);
+  box-shadow: 5px 5px 0 var(--ink);
+  transform: translate(-2px, -2px);
+}
+
+.bag-button:active {
+  box-shadow: 1px 1px 0 var(--ink);
+  transform: translate(0, 0);
+}
+
+.bag-button:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
+/* This small shape is a bag icon made with CSS, not an image file. */
+.bag-icon {
+  position: relative;
+  width: 16px;
+  height: 14px;
+  border: 2px solid currentColor;
+  border-radius: 2px;
+}
+
+.bag-icon::before {
+  position: absolute;
+  top: -8px;
+  left: 2px;
+  width: 8px;
+  height: 6px;
+  border: 2px solid currentColor;
+  border-bottom: 0;
+  border-radius: 7px 7px 0 0;
+  content: "";
+}
+
+.bag-label {
+  text-transform: uppercase;
 }
 
 .bag-count {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 20px;
-  height: 20px;
-  margin-left: 5px;
+  min-width: 23px;
+  height: 23px;
+  padding: 0 6px;
   border-radius: 50%;
-  background-color: var(--ink);
+  background-color: var(--red);
   color: white;
   font-size: 10px;
+  letter-spacing: 0;
 }
 
 /* ---------- Dark page introduction ---------- */
@@ -345,34 +401,15 @@
   background-color: var(--red);
 }
 
-/* The box picture is built from simple colored rectangles. */
-.box-visual {
-  display: grid;
-  width: 110px;
-  height: 90px;
-  gap: 4px;
-  margin: 5px auto 18px;
-  padding: 11px;
-  border: 2px solid #8c612a;
-  background-color: #d7a45e;
-  box-shadow: 6px 6px 0 #b97c36;
-}
-
-.box-visual i {
+/* Each photo is contained inside its card so every box stays neat. */
+.pack-size-image {
   display: block;
-  border-radius: 3px 3px 0 0;
-  background-color: var(--red);
-}
-
-.box-six {
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(2, 1fr);
-}
-
-.box-twelve,
-.box-party {
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: repeat(3, 1fr);
+  width: 100%;
+  max-width: 158px;
+  height: 112px;
+  margin: 0 auto 14px;
+  object-fit: cover;
+  object-position: center;
 }
 
 /* ---------- Vibe buttons ---------- */
@@ -602,7 +639,7 @@
 
 .product-info {
   position: relative;
-  padding: 16px;
+  padding: 16px 16px 58px;
   border-top: 1px solid #eee8dc;
 }
 
@@ -627,23 +664,61 @@
   font-size: 10px;
 }
 
-.product-info button {
+/* All quantity pickers share the same controls, wherever products appear. */
+.product-quantity-picker {
   position: absolute;
   right: 13px;
-  bottom: 15px;
-  width: 32px;
-  height: 32px;
+  bottom: 13px;
+}
+
+.product-quantity-picker,
+.account-quantity-picker {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  background-color: var(--paper);
+}
+
+.product-quantity-picker button,
+.account-quantity-picker button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  padding: 0;
   border: 0;
   background-color: var(--ink);
   color: white;
-  font-size: 19px;
+  cursor: pointer;
+  font-size: 18px;
 }
 
-.selected-product-card .product-info button {
+.product-quantity-picker span,
+.account-quantity-picker span {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 30px;
+  height: 34px;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.selected-product-card .product-quantity-picker button,
+.quantity-picker-has-items button {
   background-color: var(--red);
 }
 
-.product-info button:focus-visible,
+.product-quantity-picker button:disabled,
+.account-quantity-picker button:disabled {
+  cursor: not-allowed;
+  opacity: 0.35;
+}
+
+.product-quantity-picker button:focus-visible,
+.account-quantity-picker button:focus-visible,
 .vibe-card:focus-visible {
   outline: 3px solid var(--lime);
   outline-offset: 3px;
@@ -735,14 +810,19 @@
 }
 
 .summary-progress {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
   height: 7px;
   margin-bottom: 22px;
+  overflow: hidden;
   background-color: #e5e0d7;
 }
 
 .summary-progress span {
   display: block;
   width: 0;
+  max-width: 100%;
   height: 100%;
   background-color: var(--red);
 }
@@ -965,9 +1045,9 @@
     margin-left: 0;
   }
 
-  .pack-nav-actions button {
+  .bag-button {
     min-height: 44px;
-    padding: 10px 0 10px 9px;
+    padding: 9px 10px 9px 12px;
   }
 
   .mobile-account-link {
@@ -1062,5 +1142,168 @@
 
   .steps {
     max-width: 650px;
+  }
+}
+
+
+/* ---------- Final shared Bag button reset ---------- */
+
+/* This selector is intentionally specific so every page uses this one design. */
+.pack-nav .bag-button {
+  appearance: none;
+  -webkit-appearance: none;
+  box-sizing: border-box;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.pack-nav .bag-button .bag-icon,
+.pack-nav .bag-button .bag-count {
+  box-sizing: border-box;
+  flex: 0 0 auto;
+}
+
+
+/* ---------- Organized builder sections ---------- */
+
+/* These three blocks make each pack-building decision easy to find. */
+.builder-main {
+  display: grid;
+  gap: 26px;
+  min-width: 0;
+}
+
+.pack-builder-step {
+  padding: 30px;
+  border: 1px solid var(--line);
+  background-color: var(--paper);
+}
+
+.pack-builder-step .section-heading {
+  margin-bottom: 28px;
+}
+
+.pack-builder-step .vibe-heading,
+.pack-builder-step .product-heading {
+  margin-top: 0;
+}
+
+/* Products need more open space, so this step keeps only its header framed. */
+.product-step {
+  padding: 0;
+  border: 0;
+  background-color: transparent;
+}
+
+.product-step .section-heading {
+  margin-bottom: 18px;
+  padding: 25px 30px;
+  border: 1px solid var(--line);
+  background-color: var(--paper);
+}
+
+.product-step .product-toolbar {
+  margin-top: 0;
+}
+
+@media (max-width: 720px) {
+  .builder-main {
+    gap: 20px;
+  }
+
+  .pack-builder-step {
+    padding: 24px 18px;
+  }
+
+  .product-step {
+    padding: 0;
+  }
+
+  .product-step .section-heading {
+    padding: 22px 18px;
+  }
+}
+
+/* Keep the third step number inside its framed heading. */
+.product-step .section-number {
+  top: 26px;
+  left: 30px;
+}
+
+@media (max-width: 720px) {
+  .product-step .section-number {
+    top: 23px;
+    left: 18px;
+  }
+}
+
+
+/* ---------- Product category rows ---------- */
+
+/* These small labels separate the catalog without taking attention from products. */
+.product-category-list {
+  display: block;
+}
+
+.product-category-row + .product-category-row {
+  margin-top: 42px;
+}
+
+.product-category-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--line);
+}
+
+.product-category-heading > div {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.product-category-number {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 25px;
+  height: 25px;
+  background-color: var(--red);
+  color: white;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 9px;
+}
+
+.product-category-heading h3 {
+  margin: 0;
+  font-family: "Archivo Black", sans-serif;
+  font-size: 16px;
+  letter-spacing: 0.6px;
+}
+
+.product-category-heading p {
+  margin: 0;
+  color: #78736a;
+  font-size: 11px;
+  text-align: right;
+}
+
+@media (max-width: 720px) {
+  .product-category-row + .product-category-row {
+    margin-top: 32px;
+  }
+
+  .product-category-heading {
+    align-items: start;
+    flex-direction: column;
+    gap: 7px;
+  }
+
+  .product-category-heading p {
+    text-align: left;
   }
 }

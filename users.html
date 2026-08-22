@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Choose a mock Variety Co. demo user.">
   <title>Mock Users | Variety Co.</title>
-  <link rel="stylesheet" href="css/build-pack.css">
+  <link rel="stylesheet" href="css/build-pack.css?v=mood-size-1">
   <link rel="stylesheet" href="css/app.css">
 </head>
 
@@ -28,8 +28,14 @@
 
     <div class="pack-nav-actions">
       <a class="mobile-account-link" href="account.html">Sign In</a>
-      <button type="button" aria-label="Shopping bag">
-        Bag <span class="bag-count" data-cart-count>0</span>
+      <button
+        class="bag-button"
+        type="button"
+        aria-label="Shopping bag"
+      >
+        <span class="bag-icon" aria-hidden="true"></span>
+        <span class="bag-label">Bag</span>
+        <span class="bag-count" data-cart-count>0</span>
       </button>
     </div>
   </nav>
@@ -63,6 +69,6 @@
 
   <script src="mock-data.js"></script>
   <script type="module" src="firebase-client.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=mood-size-1"></script>
 </body>
 </html>

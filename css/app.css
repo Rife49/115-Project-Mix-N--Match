@@ -1151,3 +1151,42 @@
     font-size: 29px;
   }
 }
+
+
+/* ---------- Shared quantity picker placement ---------- */
+
+/* The shared picker styles are in build-pack.css because every page loads it. */
+.account-product-actions .account-quantity-picker button {
+  min-height: 0;
+  padding: 0;
+}
+
+.quick-box-item .account-quantity-picker {
+  justify-self: end;
+}
+
+
+/* Account-page button rules are more specific, so these repeat the shared values. */
+.account-product-actions .account-quantity-picker button,
+.quick-box-item .account-quantity-picker button {
+  width: 34px;
+  height: 34px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  background-color: var(--ink);
+  color: white;
+  font-size: 18px;
+  letter-spacing: normal;
+}
+
+.account-product-actions .account-quantity-picker span,
+.quick-box-item .account-quantity-picker span {
+  min-width: 30px;
+  height: 34px;
+  font-size: 12px;
+}
+
+.account-quantity-picker.quantity-picker-has-items button {
+  background-color: var(--red);
+}

@@ -837,11 +837,59 @@ function createAccountProductImage(product) {
     "</div>";
 }
 
+/* Count one product across the editable Quick Box. */
+function countProductInQuickBox(productId, quickBoxProductIds) {
+  let productQuantity = 0;
+
+  quickBoxProductIds.forEach(function (quickBoxProductId) {
+    if (quickBoxProductId === productId) {
+      productQuantity += 1;
+    }
+  });
+
+  return productQuantity;
+}
+
+/* Reuse this small picker in the saved catalog and the Quick Box. */
+function createQuickBoxQuantityPicker(product, productQuantity, quickBoxIsFull) {
+  const decreaseDisabledAttribute = productQuantity === 0 ? " disabled" : "";
+  const increaseDisabledAttribute = quickBoxIsFull ? " disabled" : "";
+  const quantityPickerStateClass = productQuantity > 0
+    ? " quantity-picker-has-items"
+    : "";
+
+  return "<div class=\"account-quantity-picker" +
+    quantityPickerStateClass +
+    "\" aria-label=\"Quantity for " +
+    product.name +
+    "\">" +
+    "<button type=\"button\" data-decrease-quick-box-product=\"" +
+    product.id +
+    "\" aria-label=\"Remove one " +
+    product.name +
+    " from your Quick Box\"" +
+    decreaseDisabledAttribute +
+    ">−</button>" +
+    "<span aria-live=\"polite\">" +
+    productQuantity +
+    "</span>" +
+    "<button type=\"button\" data-increase-quick-box-product=\"" +
+    product.id +
+    "\" aria-label=\"Add one " +
+    product.name +
+    " to your Quick Box\"" +
+    increaseDisabledAttribute +
+    ">+</button>" +
+    "</div>";
+}
+
 function renderPreviouslyBoughtProducts() {
   const previouslyBoughtList = document.querySelector(
     "[data-previously-bought-list]"
   );
   const previouslyBoughtProductIds = getPreviouslyBoughtProductIds();
+  const quickBoxProductIds = getQuickBox();
+  const quickBoxIsFull = quickBoxProductIds.length >= getPackSize();
 
   if (previouslyBoughtList === null) {
     return;
@@ -866,6 +914,11 @@ function renderPreviouslyBoughtProducts() {
       return;
     }
 
+    const productQuantity = countProductInQuickBox(
+      product.id,
+      quickBoxProductIds
+    );
+
     productCards +=
       "<article class=\"account-product\">" +
       createAccountProductImage(product) +
@@ -875,9 +928,11 @@ function renderPreviouslyBoughtProducts() {
       "<span>" + product.description + "</span>" +
       "</div>" +
       "<div class=\"account-product-actions\">" +
-      "<button type=\"button\" class=\"account-add-button\" data-add-to-quick-box=\"" +
-      product.id +
-      "\">ADD</button>" +
+      createQuickBoxQuantityPicker(
+        product,
+        productQuantity,
+        quickBoxIsFull
+      ) +
       "<button type=\"button\" class=\"account-delete-button\" data-delete-from-history=\"" +
       product.id +
       "\">DELETE</button>" +
@@ -930,21 +985,38 @@ function renderQuickBox() {
       "</div>";
   } else {
     let quickBoxRows = "";
+    const shownProductIds = [];
+    const quickBoxIsFull = quickBoxProductIds.length >= packSize;
 
-    quickBoxProductIds.forEach(function (productId, productIndex) {
+    quickBoxProductIds.forEach(function (productId) {
+      const productWasAlreadyShown = shownProductIds.indexOf(productId) !== -1;
+
+      if (productWasAlreadyShown) {
+        return;
+      }
+
+      shownProductIds.push(productId);
+
       const product = findProductById(productId);
 
       if (product === null) {
         return;
       }
 
+      const productQuantity = countProductInQuickBox(
+        product.id,
+        quickBoxProductIds
+      );
+
       quickBoxRows +=
         "<div class=\"quick-box-item\">" +
         createAccountProductImage(product) +
         "<span>" + product.name + "</span>" +
-        "<button type=\"button\" data-delete-from-quick-box=\"" +
-        productIndex +
-        "\">DELETE</button>" +
+        createQuickBoxQuantityPicker(
+          product,
+          productQuantity,
+          quickBoxIsFull
+        ) +
         "</div>";
     });
 
@@ -1001,17 +1073,19 @@ function deleteProductFromPurchaseHistory(productId) {
   showMessage("Product deleted from Previously Bought.");
 }
 
-function deleteProductFromQuickBox(productIndex) {
+/* Remove one copy, so the quantity picker can count down one at a time. */
+function removeOneProductFromQuickBox(productId) {
   const quickBoxProductIds = getQuickBox();
+  const productIndex = quickBoxProductIds.indexOf(productId);
 
-  if (productIndex < 0 || productIndex >= quickBoxProductIds.length) {
+  if (productIndex === -1) {
     return;
   }
 
   quickBoxProductIds.splice(productIndex, 1);
   saveQuickBox(quickBoxProductIds);
   renderAccountPage();
-  showMessage("Product deleted from your quick box.");
+  showMessage("Product removed from your quick box.");
 }
 
 function moveQuickBoxToCart() {
@@ -1028,17 +1102,29 @@ function moveQuickBoxToCart() {
 }
 
 function connectAccountProductButtons() {
-  const addButtons = document.querySelectorAll("[data-add-to-quick-box]");
+  const increaseButtons = document.querySelectorAll(
+    "[data-increase-quick-box-product]"
+  );
+  const decreaseButtons = document.querySelectorAll(
+    "[data-decrease-quick-box-product]"
+  );
   const historyDeleteButtons = document.querySelectorAll(
     "[data-delete-from-history]"
   );
-  const quickBoxDeleteButtons = document.querySelectorAll(
-    "[data-delete-from-quick-box]"
-  );
 
-  addButtons.forEach(function (addButton) {
-    addButton.addEventListener("click", function () {
-      addProductToQuickBox(addButton.getAttribute("data-add-to-quick-box"));
+  increaseButtons.forEach(function (increaseButton) {
+    increaseButton.addEventListener("click", function () {
+      addProductToQuickBox(
+        increaseButton.getAttribute("data-increase-quick-box-product")
+      );
+    });
+  });
+
+  decreaseButtons.forEach(function (decreaseButton) {
+    decreaseButton.addEventListener("click", function () {
+      removeOneProductFromQuickBox(
+        decreaseButton.getAttribute("data-decrease-quick-box-product")
+      );
     });
   });
 
@@ -1046,14 +1132,6 @@ function connectAccountProductButtons() {
     deleteButton.addEventListener("click", function () {
       deleteProductFromPurchaseHistory(
         deleteButton.getAttribute("data-delete-from-history")
-      );
-    });
-  });
-
-  quickBoxDeleteButtons.forEach(function (deleteButton) {
-    deleteButton.addEventListener("click", function () {
-      deleteProductFromQuickBox(
-        Number(deleteButton.getAttribute("data-delete-from-quick-box"))
       );
     });
   });
@@ -1141,6 +1219,23 @@ function getPackSize() {
   return getSavedData(storageKeys.packSize, 6);
 }
 
+/* Keep the saved products within the capacity of the currently selected box. */
+function trimBuildPackToSelectedSize() {
+  const selectedProductIds = getBuildPack();
+  const packSize = getPackSize();
+
+  if (selectedProductIds.length <= packSize) {
+    return false;
+  }
+
+  /* slice() keeps the first products and removes only the extras. */
+  const productsThatFit = selectedProductIds.slice(0, packSize);
+
+  saveData(storageKeys.buildPack, productsThatFit);
+
+  return true;
+}
+
 /* Return the name, item label, and price for the selected box size. */
 function getPackDetails() {
   const packSize = getPackSize();
@@ -1150,6 +1245,24 @@ function getPackDetails() {
   }
 
   return packOptions[6];
+}
+
+/* Use title case in the summary, while the vibe buttons can stay all caps. */
+function getFriendlyVibeName() {
+  const savedVibeName = getSavedData(storageKeys.selectedVibe, "GAME ON");
+  const friendlyVibeNames = {
+    "GAME ON": "Game On",
+    "MOVIE NIGHT": "Movie Night",
+    "GAME DAY": "Game Day",
+    "ALL-NIGHTER": "All-Nighter",
+    "CHILL MODE": "Chill Mode"
+  };
+
+  if (friendlyVibeNames[savedVibeName] !== undefined) {
+    return friendlyVibeNames[savedVibeName];
+  }
+
+  return savedVibeName;
 }
 
 /*
@@ -1197,6 +1310,104 @@ function createBuildPackProductArt(product) {
     "</div>";
 }
 
+/*
+  Put each product into one easy-to-find row. Drinks can have several catalog
+  category names, but they all belong together in the Drinks row.
+*/
+function getBuildPackCategoryName(product) {
+  const drinkCategories = [
+    "ENERGY DRINK",
+    "HYDRATION",
+    "SPORTS DRINK",
+    "WATER",
+    "SODA",
+    "SPARKLING WATER"
+  ];
+
+  if (drinkCategories.indexOf(product.category) !== -1) {
+    return "drinks";
+  }
+
+  if (product.category === "CANDY") {
+    return "candy";
+  }
+
+  return "snacks";
+}
+
+/*
+  This function creates one card. Keeping it separate makes it easier to see
+  that the product layout is unchanged even though the cards are now grouped.
+*/
+function createBuildPackProductCard(product) {
+  return "<article class=\"product-card\" data-build-product-card-id=\"" +
+    product.id +
+    "\">" +
+    createBuildPackProductTag(product) +
+    createBuildPackProductArt(product) +
+    "<div class=\"product-info\">" +
+    "<p>" +
+    product.category +
+    "</p>" +
+    "<h3>" +
+    product.name +
+    "</h3>" +
+    "<span>" +
+    product.description +
+    "</span>" +
+    "<div class=\"product-quantity-picker\" aria-label=\"Quantity for " +
+    product.name +
+    "\">" +
+    "<button type=\"button\" data-decrease-product-id=\"" +
+    product.id +
+    "\" aria-label=\"Remove one " +
+    product.name +
+    "\" disabled>−</button>" +
+    "<span data-build-product-quantity aria-live=\"polite\">0</span>" +
+    "<button type=\"button\" data-increase-product-id=\"" +
+    product.id +
+    "\" aria-label=\"Add one " +
+    product.name +
+    "\">+</button>" +
+    "</div>" +
+    "</div>" +
+    "</article>";
+}
+
+/* Create one labeled row with its own product grid. */
+function createBuildPackCategoryRow(categoryDetails, products) {
+  let productCards = "";
+
+  products.forEach(function (product) {
+    productCards += createBuildPackProductCard(product);
+  });
+
+  return "<section class=\"product-category-row product-category-" +
+    categoryDetails.name +
+    "\" aria-labelledby=\"build-category-" +
+    categoryDetails.name +
+    "\">" +
+    "<div class=\"product-category-heading\">" +
+    "<div>" +
+    "<span class=\"product-category-number\">" +
+    categoryDetails.number +
+    "</span>" +
+    "<h3 id=\"build-category-" +
+    categoryDetails.name +
+    "\">" +
+    categoryDetails.title +
+    "</h3>" +
+    "</div>" +
+    "<p>" +
+    categoryDetails.description +
+    "</p>" +
+    "</div>" +
+    "<div class=\"product-grid\">" +
+    productCards +
+    "</div>" +
+    "</section>";
+}
+
 function renderBuildPackProducts() {
   const productList = document.querySelector("[data-build-product-list]");
 
@@ -1204,65 +1415,108 @@ function renderBuildPackProducts() {
     return;
   }
 
-  let productCards = "";
+  /* This list controls the order visitors see: drinks, snacks, then candy. */
+  const productCategories = [
+    {
+      name: "drinks",
+      number: "01",
+      title: "DRINKS",
+      description: "Energy, hydration, and refreshing drinks."
+    },
+    {
+      name: "snacks",
+      number: "02",
+      title: "SNACKS",
+      description: "Crunchy, savory, and better-for-you favorites."
+    },
+    {
+      name: "candy",
+      number: "03",
+      title: "CANDY",
+      description: "Sweet treats for the perfect finish."
+    }
+  ];
+  const productsByCategory = {
+    drinks: [],
+    snacks: [],
+    candy: []
+  };
 
   productsForDisplay.forEach(function (product) {
-    productCards +=
-      "<article class=\"product-card\">" +
-      createBuildPackProductTag(product) +
-      createBuildPackProductArt(product) +
-      "<div class=\"product-info\">" +
-      "<p>" +
-      product.category +
-      "</p>" +
-      "<h3>" +
-      product.name +
-      "</h3>" +
-      "<span>" +
-      product.description +
-      "</span>" +
-      "<button type=\"button\" data-build-product-id=\"" +
-      product.id +
-      "\" aria-label=\"Add " +
-      product.name +
-      "\" aria-pressed=\"false\">+</button>" +
-      "</div>" +
-      "</article>";
+    const categoryName = getBuildPackCategoryName(product);
+
+    productsByCategory[categoryName].push(product);
   });
 
-  productList.innerHTML = productCards;
+  let categoryRows = "";
+
+  productCategories.forEach(function (categoryDetails) {
+    const productsInThisCategory = productsByCategory[categoryDetails.name];
+
+    categoryRows += createBuildPackCategoryRow(
+      categoryDetails,
+      productsInThisCategory
+    );
+  });
+
+  productList.innerHTML = categoryRows;
 }
 
 /*
   Update every product card after the visitor adds or removes an item.
   closest() finds the card that contains the button that was clicked.
 */
+/* Count repeated product ids so every card can show its own quantity. */
+function countProductInBuildPack(productId, selectedProductIds) {
+  let productQuantity = 0;
+
+  selectedProductIds.forEach(function (selectedProductId) {
+    if (selectedProductId === productId) {
+      productQuantity += 1;
+    }
+  });
+
+  return productQuantity;
+}
+
+/* Update the number and button state in every product quantity picker. */
 function updateBuildProductCards() {
   const selectedProductIds = getBuildPack();
-  const productButtons = document.querySelectorAll("[data-build-product-id]");
+  const packIsFull = selectedProductIds.length >= getPackSize();
+  const productCards = document.querySelectorAll("[data-build-product-card-id]");
 
-  productButtons.forEach(function (productButton) {
-    const productId = productButton.getAttribute("data-build-product-id");
-    const product = findProductById(productId);
-    const productCard = productButton.closest(".product-card");
-    const productIsSelected = selectedProductIds.indexOf(productId) !== -1;
+  productCards.forEach(function (productCard) {
+    const productId = productCard.getAttribute("data-build-product-card-id");
+    const productQuantity = countProductInBuildPack(
+      productId,
+      selectedProductIds
+    );
+    const quantityDisplay = productCard.querySelector(
+      "[data-build-product-quantity]"
+    );
+    const decreaseButton = productCard.querySelector(
+      "[data-decrease-product-id]"
+    );
+    const increaseButton = productCard.querySelector(
+      "[data-increase-product-id]"
+    );
 
-    if (productIsSelected) {
-      productButton.textContent = "−";
-      productButton.setAttribute("aria-label", "Remove " + product.name);
-      productButton.setAttribute("aria-pressed", "true");
+    if (quantityDisplay !== null) {
+      quantityDisplay.textContent = productQuantity;
+    }
 
-      if (productCard !== null) {
-        productCard.classList.add("selected-product-card");
-      }
+    if (decreaseButton !== null) {
+      decreaseButton.disabled = productQuantity === 0;
+    }
+
+    if (increaseButton !== null) {
+      increaseButton.disabled = packIsFull;
+    }
+
+    if (productQuantity > 0) {
+      productCard.classList.add("selected-product-card");
     } else {
-      productButton.textContent = "+";
-      productButton.setAttribute("aria-label", "Add " + product.name);
-      productButton.setAttribute("aria-pressed", "false");
-
-      if (productCard !== null) {
-        productCard.classList.remove("selected-product-card");
-      }
+      productCard.classList.remove("selected-product-card");
     }
   });
 }
@@ -1283,16 +1537,24 @@ function updateBuildPackPage() {
   const packSize = getPackSize();
   const packDetails = getPackDetails();
   const packCounter = document.querySelector(".fill-counter strong");
+  const packCapacity = document.querySelector("[data-pack-fill-capacity]");
   const packNameHeading = document.querySelector("[data-pack-name]");
   const packSummaryName = document.querySelector("[data-pack-summary-name]");
   const packSummaryPrice = document.querySelector("[data-pack-summary-price]");
   const summaryCount = document.querySelector(".summary-head > span");
   const summaryVibe = document.querySelector(".summary-sub");
+  const summaryMessage = document.querySelector("[data-pack-summary-message]");
+  const summaryHelper = document.querySelector("[data-pack-summary-helper]");
+  const friendlyVibeName = getFriendlyVibeName();
   const progressBar = document.querySelector(".summary-progress span");
   const checkoutButton = document.querySelector(".checkout-button");
 
   if (packCounter !== null) {
     packCounter.textContent = selectedCount;
+  }
+
+  if (packCapacity !== null) {
+    packCapacity.textContent = packSize;
   }
 
   if (summaryCount !== null) {
@@ -1312,11 +1574,31 @@ function updateBuildPackPage() {
   }
 
   if (summaryVibe !== null) {
-    summaryVibe.textContent = getSavedData(storageKeys.selectedVibe, "GAME ON") + " pack";
+    summaryVibe.textContent = friendlyVibeName + " pack";
+  }
+
+  if (summaryMessage !== null) {
+    summaryMessage.textContent =
+      "Choose " + packSize + " to start your " + friendlyVibeName + ".";
+  }
+
+  if (summaryHelper !== null) {
+    if (selectedCount >= packSize) {
+      summaryHelper.textContent = packDetails.name + " is ready to check out.";
+    } else {
+      const remainingItems = packSize - selectedCount;
+      const favoriteWord = remainingItems === 1 ? "favorite" : "favorites";
+
+      summaryHelper.textContent =
+        "Add " + remainingItems + " more " + favoriteWord + " to complete your box.";
+    }
   }
 
   if (progressBar !== null) {
-    progressBar.style.width = (selectedCount / packSize) * 100 + "%";
+    /* The red progress line should never be wider than the summary card. */
+    const progressPercentage = Math.min((selectedCount / packSize) * 100, 100);
+
+    progressBar.style.width = progressPercentage + "%";
   }
 
   if (checkoutButton !== null) {
@@ -1333,45 +1615,115 @@ function updateBuildPackPage() {
   updateBuildProductCards();
 }
 
+/* Add one copy of a product, as long as the selected box has room. */
+function addOneProductToBuildPack(product) {
+  const selectedProductIds = getBuildPack();
+
+  if (selectedProductIds.length >= getPackSize()) {
+    showMessage("Your pack is full. Remove an item to add something else.");
+    return;
+  }
+
+  selectedProductIds.push(product.id);
+  saveData(storageKeys.buildPack, selectedProductIds);
+  syncCartWithBuildPack();
+  updateBuildPackPage();
+  showMessage(product.name + " was added to your pack.");
+}
+
+/* Remove one copy of a product, while leaving any other copies in the pack. */
+function removeOneProductFromBuildPack(product) {
+  const selectedProductIds = getBuildPack();
+  const productIndex = selectedProductIds.indexOf(product.id);
+
+  if (productIndex === -1) {
+    return;
+  }
+
+  selectedProductIds.splice(productIndex, 1);
+  saveData(storageKeys.buildPack, selectedProductIds);
+  syncCartWithBuildPack();
+  updateBuildPackPage();
+  showMessage(product.name + " was removed from your pack.");
+}
+
 /*
-  Product cards are redrawn after Firebase loads the cloud catalog, so their
-  click listeners live in their own function and can be attached again.
+  Product cards are redrawn after Firebase loads, so these listeners are
+  connected again after each redraw.
 */
-function connectBuildProductButtons() {
-  const productButtons = document.querySelectorAll(
-    ".product-grid .product-info button"
+function connectBuildProductQuantityPickers() {
+  const increaseButtons = document.querySelectorAll(
+    "[data-increase-product-id]"
+  );
+  const decreaseButtons = document.querySelectorAll(
+    "[data-decrease-product-id]"
   );
 
-  productButtons.forEach(function (productButton) {
-    const productId = productButton.getAttribute("data-build-product-id");
+  increaseButtons.forEach(function (increaseButton) {
+    const productId = increaseButton.getAttribute("data-increase-product-id");
     const product = findProductById(productId);
 
     if (product !== null) {
-      productButton.addEventListener("click", function () {
-        const selectedProductIds = getBuildPack();
-
-        const productIndex = selectedProductIds.indexOf(product.id);
-
-        if (productIndex !== -1) {
-          selectedProductIds.splice(productIndex, 1);
-          saveData(storageKeys.buildPack, selectedProductIds);
-          syncCartWithBuildPack();
-          updateBuildPackPage();
-          showMessage(product.name + " was removed from your pack.");
-          return;
-        }
-
-        if (selectedProductIds.length >= getPackSize()) {
-          showMessage("Your pack is full. Remove an item to add something else.");
-          return;
-        }
-
-        selectedProductIds.push(product.id);
-        saveData(storageKeys.buildPack, selectedProductIds);
-        syncCartWithBuildPack();
-        updateBuildPackPage();
-        showMessage(product.name + " was added to your pack.");
+      increaseButton.addEventListener("click", function () {
+        addOneProductToBuildPack(product);
       });
+    }
+  });
+
+  decreaseButtons.forEach(function (decreaseButton) {
+    const productId = decreaseButton.getAttribute("data-decrease-product-id");
+    const product = findProductById(productId);
+
+    if (product !== null) {
+      decreaseButton.addEventListener("click", function () {
+        removeOneProductFromBuildPack(product);
+      });
+    }
+  });
+}
+
+/*
+  Each mood begins with six matching favorites. This repeats that set until it
+  fills the selected 6-, 12-, or 18-item box. The quantity pickers then make
+  those repeated items easy to change.
+*/
+function createVibePackForSelectedSize(vibeName) {
+  const vibePreset = vibePresets[vibeName];
+
+  if (vibePreset === undefined || vibePreset.length === 0) {
+    return null;
+  }
+
+  const selectedPackSize = getPackSize();
+  const sizedVibePack = [];
+
+  for (let itemIndex = 0; itemIndex < selectedPackSize; itemIndex += 1) {
+    const presetItemIndex = itemIndex % vibePreset.length;
+
+    sizedVibePack.push(vibePreset[presetItemIndex]);
+  }
+
+  return sizedVibePack;
+}
+
+/* Make the red selected outline follow the currently chosen pack size. */
+function updateSelectedPackSizeCards() {
+  const sizeCards = document.querySelectorAll(".size-card");
+  const packSizes = [6, 12, 18];
+  const selectedPackSize = getPackSize();
+
+  sizeCards.forEach(function (sizeCard, cardIndex) {
+    const sizeInput = sizeCard.querySelector("input");
+    const isSelectedSize = packSizes[cardIndex] === selectedPackSize;
+
+    if (isSelectedSize) {
+      sizeCard.classList.add("selected");
+    } else {
+      sizeCard.classList.remove("selected");
+    }
+
+    if (sizeInput !== null) {
+      sizeInput.checked = isSelectedSize;
     }
   });
 }
@@ -1386,8 +1738,12 @@ function setupBuilderPage() {
   }
 
   const packSizes = [6, 12, 18];
-  const savedPackSize = getPackSize();
   const savedVibeName = getSavedData(storageKeys.selectedVibe, "GAME ON");
+  const savedPackWasTrimmed = trimBuildPackToSelectedSize();
+
+  if (savedPackWasTrimmed) {
+    syncCartWithBuildPack();
+  }
 
   /* Restore the selected vibe style after the page refreshes. */
   vibeButtons.forEach(function (vibeButton) {
@@ -1400,36 +1756,32 @@ function setupBuilderPage() {
     }
   });
 
+  updateSelectedPackSizeCards();
+
   sizeCards.forEach(function (sizeCard, cardIndex) {
-    const sizeInput = sizeCard.querySelector("input");
-
-    if (packSizes[cardIndex] === savedPackSize) {
-      sizeCard.classList.add("selected");
-      sizeInput.checked = true;
-    } else {
-      sizeCard.classList.remove("selected");
-    }
-
     sizeCard.addEventListener("click", function () {
       saveData(storageKeys.packSize, packSizes[cardIndex]);
+
+      const packWasTrimmed = trimBuildPackToSelectedSize();
+
       syncCartWithBuildPack();
-
-      sizeCards.forEach(function (otherSizeCard) {
-        otherSizeCard.classList.remove("selected");
-      });
-
-      sizeCard.classList.add("selected");
-      sizeInput.checked = true;
+      updateSelectedPackSizeCards();
       updateBuildPackPage();
+
+      if (packWasTrimmed) {
+        showMessage(
+          "Your products were adjusted to fit " + getPackDetails().name + "."
+        );
+      }
     });
   });
 
   vibeButtons.forEach(function (vibeButton) {
     vibeButton.addEventListener("click", function () {
       const vibeName = vibeButton.querySelector("strong").textContent;
-      const starterPack = vibePresets[vibeName];
+      const starterPack = createVibePackForSelectedSize(vibeName);
 
-      if (starterPack === undefined) {
+      if (starterPack === null) {
         return;
       }
 
@@ -1448,7 +1800,10 @@ function setupBuilderPage() {
 
       vibeButton.classList.add("active");
       updateBuildPackPage();
-      showMessage(vibeName + " starter pack loaded. Add or remove anything you want.");
+      showMessage(
+        getPackSize() + "-item " + getFriendlyVibeName() +
+        " starter pack loaded. Add or remove anything you want."
+      );
     });
   });
 
@@ -1503,7 +1858,7 @@ async function loadFirebaseData() {
     if (firebaseProducts.length > 0) {
       productsForDisplay = addLocalImagePathsToFirebaseProducts(firebaseProducts);
       renderBuildPackProducts();
-      connectBuildProductButtons();
+      connectBuildProductQuantityPickers();
       updateBuildPackPage();
       renderAccountPage();
     }
@@ -1542,6 +1897,13 @@ async function loadFirebaseData() {
       saveData(storageKeys.selectedVibe, firebaseCart.selectedVibe);
     }
 
+    const firebasePackWasTrimmed = trimBuildPackToSelectedSize();
+
+    if (firebasePackWasTrimmed) {
+      syncCartWithBuildPack();
+    }
+
+    updateSelectedPackSizeCards();
     updateCartCount();
     renderCartPage();
     updateBuildPackPage();
@@ -1567,7 +1929,7 @@ function startApplication() {
   setupAccountPage();
   renderAccountPage();
   renderBuildPackProducts();
-  connectBuildProductButtons();
+  connectBuildProductQuantityPickers();
   setupBuilderPage();
   loadFirebaseData();
 }

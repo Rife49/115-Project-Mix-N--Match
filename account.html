@@ -8,7 +8,7 @@
     content="Sign in to save previously bought Variety Co. products and build a quick reorder box."
   >
   <title>Sign In | Variety Co.</title>
-  <link rel="stylesheet" href="css/build-pack.css">
+  <link rel="stylesheet" href="css/build-pack.css?v=mood-size-1">
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body class="utility-page">
@@ -31,8 +31,14 @@
 
     <div class="pack-nav-actions">
       <a class="mobile-account-link" href="account.html">Sign In</a>
-      <button type="button" aria-label="Shopping bag">
-        Bag <span class="bag-count" data-cart-count>0</span>
+      <button
+        class="bag-button"
+        type="button"
+        aria-label="Shopping bag"
+      >
+        <span class="bag-icon" aria-hidden="true"></span>
+        <span class="bag-label">Bag</span>
+        <span class="bag-count" data-cart-count>0</span>
       </button>
     </div>
   </nav>
@@ -105,8 +111,8 @@
               <h2>PREVIOUSLY BOUGHT</h2>
             </div>
             <p>
-              Add a favorite to your Quick Box, or delete it from this saved
-              list when you no longer want to see it here.
+              Use the − and + buttons to choose quantities for your Quick Box,
+              or delete a product from this saved list when you no longer want it here.
             </p>
           </div>
 
@@ -146,6 +152,6 @@
 
   <script src="mock-data.js"></script>
   <script type="module" src="firebase-client.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=mood-size-1"></script>
 </body>
 </html>

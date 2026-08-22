@@ -7,8 +7,8 @@
   <title>Build Your Pack | Variety Co.</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
   <link rel="stylesheet" href="css/style.css">
-  <!-- This version number makes browsers reload the newest card-image styles. -->
-  <link rel="stylesheet" href="css/build-pack.css?v=product-card-images-6">
+  <!-- This version number makes every page reload the shared navigation styles. -->
+  <link rel="stylesheet" href="css/build-pack.css?v=pack-images-1">
   <link rel="stylesheet" href="css/app.css">
 </head>
 <body class="pack-page">
@@ -24,7 +24,15 @@
     </div>
     <div class="pack-nav-actions">
       <a class="mobile-account-link" href="account.html">Sign In</a>
-      <button type="button" aria-label="Shopping bag">Bag <span class="bag-count" data-cart-count>0</span></button>
+      <button
+        class="bag-button"
+        type="button"
+        aria-label="Shopping bag"
+      >
+        <span class="bag-icon" aria-hidden="true"></span>
+        <span class="bag-label">Bag</span>
+        <span class="bag-count" data-cart-count>0</span>
+      </button>
     </div>
   </nav>
 
@@ -44,76 +52,157 @@
 
     <section class="builder-shell">
       <div class="builder-main">
-        <div class="section-heading">
-          <div><span class="section-number">01</span><p class="eyebrow">START HERE</p><h2>Choose your pack size</h2></div>
-          <p>Not sure? Start small—you can always come back for more.</p>
-        </div>
+        <!-- Step 1: Choose how many products fit in the box. -->
+        <section class="pack-builder-step">
+          <div class="section-heading">
+            <div>
+              <span class="section-number">01</span>
+              <p class="eyebrow">START HERE</p>
+              <h2>Choose your pack size</h2>
+            </div>
+            <p>Start small, or choose a bigger box for more favorites.</p>
+          </div>
 
-        <div class="size-grid">
-          <label class="size-card selected">
-            <input type="radio" name="pack-size" checked>
-            <span class="choice-dot"></span>
-            <span class="box-visual box-six"><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            <strong>THE SIX</strong><small>6 items</small><b>$24.00</b>
-            <em>PERFECT STARTER</em>
-          </label>
-          <label class="size-card">
-            <input type="radio" name="pack-size">
-            <span class="choice-dot"></span>
-            <span class="box-visual box-twelve"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            <strong>THE DOZEN</strong><small>12 items</small><b>$44.00</b>
-            <em>BEST VALUE</em>
-          </label>
-          <label class="size-card">
-            <input type="radio" name="pack-size">
-            <span class="choice-dot"></span>
-            <span class="box-visual box-party"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
-            <strong>THE PARTY PACK</strong><small>18 items</small><b>$59.00</b>
-            <em>SHIPS FREE</em>
-          </label>
-        </div>
+          <div class="size-grid">
+            <label class="size-card selected">
+              <input type="radio" name="pack-size" checked>
+              <span class="choice-dot"></span>
+              <img
+                class="pack-size-image"
+                src="images/pack-sizes/variety-six-pack.png"
+                alt="Variety Co. six-item snack and drink box"
+              >
+              <strong>THE SIX</strong>
+              <small>6 items</small>
+              <b>$24.00</b>
+              <em>PERFECT STARTER</em>
+            </label>
 
-        <div class="section-heading vibe-heading">
-          <div><span class="section-number">02</span><p class="eyebrow">SET THE MOOD</p><h2>What's your vibe?</h2></div>
-          <p>Choose a vibe to load a starter pack, then change anything you want.</p>
-        </div>
+            <label class="size-card">
+              <input type="radio" name="pack-size">
+              <span class="choice-dot"></span>
+              <img
+                class="pack-size-image"
+                src="images/pack-sizes/variety-dozen-pack.png"
+                alt="Variety Co. twelve-item snack and drink box"
+              >
+              <strong>THE DOZEN</strong>
+              <small>12 items</small>
+              <b>$44.00</b>
+              <em>BEST VALUE</em>
+            </label>
 
-        <div class="vibe-grid">
-          <button class="vibe-card active" type="button"><span>🎮</span><strong>GAME ON</strong><small>Focus. Fuel. Win.</small></button>
-          <button class="vibe-card" type="button"><span>🎬</span><strong>MOVIE NIGHT</strong><small>Roll credits, pass snacks.</small></button>
-          <button class="vibe-card" type="button"><span>🏀</span><strong>GAME DAY</strong><small>Stay loud. Stay fueled.</small></button>
-          <button class="vibe-card" type="button"><span>⚡</span><strong>ALL-NIGHTER</strong><small>Locked in and dialed up.</small></button>
-          <button class="vibe-card" type="button"><span>🌿</span><strong>CHILL MODE</strong><small>Easy sips. Good energy.</small></button>
-        </div>
+            <label class="size-card">
+              <input type="radio" name="pack-size">
+              <span class="choice-dot"></span>
+              <img
+                class="pack-size-image"
+                src="images/pack-sizes/variety-party-pack.png"
+                alt="Variety Co. eighteen-item snack and drink box"
+              >
+              <strong>THE PARTY PACK</strong>
+              <small>18 items</small>
+              <b>$59.00</b>
+              <em>SHIPS FREE</em>
+            </label>
+          </div>
+        </section>
 
-        <div class="section-heading product-heading">
-          <div><span class="section-number">03</span><p class="eyebrow">MAKE IT YOURS</p><h2>Fill your pack</h2></div>
-          <div class="fill-counter"><strong>0</strong> / 6 selected</div>
-        </div>
+        <!-- Step 2: A vibe adds a starter pack that still stays editable. -->
+        <section class="pack-builder-step">
+          <div class="section-heading vibe-heading">
+            <div>
+              <span class="section-number">02</span>
+              <p class="eyebrow">SET THE MOOD</p>
+              <h2>Choose your vibe</h2>
+            </div>
+            <p>Pick a starter pack, then change anything you do not want.</p>
+          </div>
 
-        <div class="product-toolbar">
-          <p class="product-selection-help">
-            Choose a vibe for six starter picks. Use + to add and − to remove.
-          </p>
-        </div>
+          <div class="vibe-grid">
+            <button class="vibe-card active" type="button">
+              <span>🎮</span>
+              <strong>GAME ON</strong>
+              <small>Focus. Fuel. Win.</small>
+            </button>
+            <button class="vibe-card" type="button">
+              <span>🎬</span>
+              <strong>MOVIE NIGHT</strong>
+              <small>Roll credits, pass snacks.</small>
+            </button>
+            <button class="vibe-card" type="button">
+              <span>🏀</span>
+              <strong>GAME DAY</strong>
+              <small>Stay loud. Stay fueled.</small>
+            </button>
+            <button class="vibe-card" type="button">
+              <span>⚡</span>
+              <strong>ALL-NIGHTER</strong>
+              <small>Locked in and dialed up.</small>
+            </button>
+            <button class="vibe-card" type="button">
+              <span>🌿</span>
+              <strong>CHILL MODE</strong>
+              <small>Easy sips. Good energy.</small>
+            </button>
+          </div>
+        </section>
 
-        <div class="product-grid" data-build-product-list>
-          <!-- app.js creates one product card for every product in mock-data.js. -->
-        </div>
+        <!-- Step 3: Add or remove individual favorites. -->
+        <section class="pack-builder-step product-step">
+          <div class="section-heading product-heading">
+            <div>
+              <span class="section-number">03</span>
+              <p class="eyebrow">MAKE IT YOURS</p>
+              <h2>Fill your pack</h2>
+            </div>
+            <div class="fill-counter">
+              <strong>0</strong> / <span data-pack-fill-capacity>6</span> selected
+            </div>
+          </div>
+
+          <div class="product-toolbar">
+            <p class="product-selection-help">
+              Choose from drinks, snacks, and candy. Use the − and + buttons to
+              choose how many of each item you want. Your Bag updates as you go.
+            </p>
+          </div>
+
+          <div class="product-category-list" data-build-product-list>
+            <!-- app.js creates one product card for every product in mock-data.js. -->
+          </div>
+        </section>
       </div>
 
+      <!-- This summary always shows the current box and price. -->
       <aside class="pack-summary">
-        <div class="summary-head"><p class="eyebrow">YOUR BOX</p><span>0 / 6</span></div>
+        <div class="summary-head">
+          <p class="eyebrow">YOUR BOX</p>
+          <span>0 / 6</span>
+        </div>
         <h2 data-pack-name>The Six</h2>
         <p class="summary-sub">Game On pack</p>
-        <div class="empty-box"><div class="box-lid"></div><div class="box-body"><span>YOUR MIX<br>GOES HERE</span></div></div>
-        <h3>Your pack is waiting.</h3>
-        <p>Add 6 favorites to unlock your perfect mix.</p>
+        <div class="empty-box">
+          <div class="box-lid"></div>
+          <div class="box-body"><span>YOUR MIX<br>GOES HERE</span></div>
+        </div>
+        <h3 data-pack-summary-message>Choose 6 to start your Game On.</h3>
+        <p data-pack-summary-helper>Add 6 favorites to unlock your perfect mix.</p>
         <div class="summary-progress"><span></span></div>
-        <div class="summary-row"><span data-pack-summary-name>6-item pack</span><strong data-pack-summary-price>$24.00</strong></div>
-        <div class="summary-row muted"><span>Shipping</span><span>Calculated at checkout</span></div>
-        <button class="checkout-button" type="button" disabled>ADD 6 MORE ITEMS</button>
-        <small class="summary-note">✓ Satisfaction guaranteed &nbsp; ✓ Ships in 1–2 business days</small>
+        <div class="summary-row">
+          <span data-pack-summary-name>6-item pack</span>
+          <strong data-pack-summary-price>$24.00</strong>
+        </div>
+        <div class="summary-row muted">
+          <span>Shipping</span>
+          <span>Calculated at checkout</span>
+        </div>
+        <button class="checkout-button" type="button" disabled>
+          ADD 6 MORE ITEMS
+        </button>
+        <small class="summary-note">
+          ✓ Satisfaction guaranteed &nbsp; ✓ Ships in 1–2 business days
+        </small>
       </aside>
     </section>
   </main>
@@ -121,6 +210,6 @@
   <footer class="builder-footer"><a class="pack-logo" href="index.html">VARIETY<span>CO.</span></a><p>Your favorites. Your pack. Your way.</p><span>© 2026 Variety Co.</span></footer>
   <script src="mock-data.js"></script>
   <script type="module" src="firebase-client.js"></script>
-  <script src="app.js"></script>
+  <script src="app.js?v=pack-images-1"></script>
 </body>
 </html>
