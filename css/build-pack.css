@@ -405,11 +405,23 @@
 .pack-size-image {
   display: block;
   width: 100%;
-  max-width: 158px;
   height: 112px;
   margin: 0 auto 14px;
   object-fit: cover;
   object-position: center;
+}
+
+/* These widths make the three cards feel like small, medium, and large boxes. */
+.pack-size-six {
+  max-width: 132px;
+}
+
+.pack-size-dozen {
+  max-width: 148px;
+}
+
+.pack-size-party {
+  max-width: 158px;
 }
 
 /* ---------- Vibe buttons ---------- */
@@ -765,34 +777,19 @@
   font-size: 12px;
 }
 
-/* A simple illustrated empty box. */
+/* The summary uses the same approved box artwork as the size cards. */
 .empty-box {
-  width: 180px;
+  width: 100%;
+  max-width: 225px;
   margin: 0 auto 27px;
 }
 
-.box-lid {
-  height: 25px;
-  border: 2px solid #936127;
-  border-bottom: 0;
-  background-color: #d99e53;
-}
-
-.box-body {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  height: 110px;
-  border: 2px solid #936127;
-  background-color: #c78b42;
-}
-
-.box-body span {
-  padding: 8px;
-  border: 2px solid #8f5e26;
-  color: #86551e;
-  font-family: "Archivo Black", sans-serif;
-  font-size: 13px;
+.summary-box-image {
+  display: block;
+  width: 100%;
+  height: 145px;
+  object-fit: cover;
+  object-position: center;
 }
 
 .pack-summary h3 {
