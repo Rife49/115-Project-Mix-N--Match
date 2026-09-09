@@ -72,13 +72,17 @@
   padding: 0 5vw 100px;
 }
 
+.cart-main-content {
+  min-width: 0;
+}
+
 .cart-items {
   border-top: 1px solid var(--line);
 }
 
 .cart-item {
   display: grid;
-  grid-template-columns: 85px 1fr auto;
+  grid-template-columns: 85px minmax(0, 1fr) auto;
   align-items: center;
   gap: 20px;
   padding: 20px 0;
@@ -95,6 +99,21 @@
   color: white;
   font-family: "Archivo Black", sans-serif;
   font-size: 14px;
+}
+
+/* Real product packages fit inside the same small Bag image space. */
+.cart-item-photo-frame {
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background-color: var(--white);
+}
+
+.cart-item-photo {
+  display: block;
+  width: 58%;
+  height: 58%;
+  object-fit: contain;
+  object-position: center;
 }
 
 .purple-product {
@@ -137,6 +156,10 @@
   letter-spacing: 1px;
 }
 
+.cart-item-details {
+  min-width: 0;
+}
+
 .cart-item-details h2 {
   margin: 0 0 5px;
   font-family: "Archivo Black", sans-serif;
@@ -149,23 +172,38 @@
   font-size: 12px;
 }
 
-.cart-item-quantity {
-  color: #625e56;
-  font-size: 13px;
-  white-space: nowrap;
+/* The Bag uses the shared picker style with its own grid placement. */
+.cart-item-quantity-picker {
+  justify-self: end;
 }
 
-.cart-item button {
-  grid-column: 2 / 4;
-  justify-self: start;
-  padding: 0;
-  border: 0;
-  border-bottom: 1px solid var(--ink);
-  background-color: transparent;
-  color: var(--ink);
+/* This button stays below the Bag list so shoppers can keep filling a pack. */
+.cart-add-more-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--ink);
+  background-color: var(--ink);
+  color: white;
   font-size: 10px;
   font-weight: 800;
   letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.cart-add-more-button:hover {
+  background-color: var(--lime);
+  color: var(--ink);
+}
+
+.cart-add-more-button:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
 }
 
 .empty-cart {
@@ -250,19 +288,6 @@
   color: var(--ink);
   text-decoration: underline;
 }
-
-.cart-summary > a {
-  display: block;
-  margin-top: 20px;
-  color: var(--ink);
-  font-size: 10px;
-  font-weight: 800;
-  letter-spacing: 1px;
-  text-align: center;
-  text-decoration: none;
-}
-
-
 
 .cart-summary button:disabled {
   cursor: not-allowed;
@@ -732,6 +757,35 @@
   border-bottom: 1px solid var(--line);
 }
 
+/* This mirrors the Bag link and gives History shoppers a way to find new items. */
+.account-build-more-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--ink);
+  background-color: var(--ink);
+  color: white;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-decoration: none;
+}
+
+.account-build-more-button:hover {
+  background-color: var(--lime);
+  color: var(--ink);
+}
+
+.account-build-more-button:focus-visible {
+  outline: 3px solid var(--red);
+  outline-offset: 3px;
+}
+
 .account-product {
   display: grid;
   grid-template-columns: 58px minmax(0, 1fr) auto;
@@ -956,14 +1010,6 @@
     height: 80px;
   }
 
-  .cart-item-quantity {
-    grid-column: 2 / 3;
-  }
-
-  .cart-item button {
-    grid-column: 2 / 4;
-  }
-
   .active-user-message {
     align-items: flex-start;
     flex-direction: column;
@@ -1088,15 +1134,14 @@
     font-size: 16px;
   }
 
-  .cart-item-quantity {
+  .cart-item-quantity-picker {
     grid-column: 2;
     grid-row: 2;
+    justify-self: start;
   }
 
-  .cart-item button {
-    grid-column: 2;
-    grid-row: 3;
-    min-height: 32px;
+  .cart-add-more-button {
+    margin-top: 14px;
   }
 
   .cart-summary {

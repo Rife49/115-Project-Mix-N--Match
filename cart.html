@@ -6,7 +6,7 @@
   <meta name="description" content="View the items saved in your Variety Co. demo cart.">
   <title>Your Cart | Variety Co.</title>
   <link rel="stylesheet" href="css/build-pack.css?v=classic-colors-1">
-  <link rel="stylesheet" href="css/app.css">
+  <link rel="stylesheet" href="css/app.css?v=history-add-more-1">
 </head>
 
 <body class="utility-page">
@@ -23,11 +23,11 @@
       <a href="index.html">Home</a>
       <a href="build-pack.html">Build Your Pack</a>
       <a href="about-us.html">About Us</a>
-      <a href="account.html">Sign In</a>
+      <a href="account.html" data-account-navigation-link>Sign In</a>
     </div>
 
     <div class="pack-nav-actions">
-      <a class="mobile-account-link" href="account.html">Sign In</a>
+      <a class="mobile-account-link" href="account.html" data-account-navigation-link>Sign In</a>
       <button
         class="bag-button"
         type="button"
@@ -52,8 +52,14 @@
     </section>
 
     <section class="cart-layout">
-      <div class="cart-items" data-cart-items>
-        <!-- app.js places cart rows here. -->
+      <div class="cart-main-content">
+        <div class="cart-items" data-cart-items>
+          <!-- app.js places cart rows here. -->
+        </div>
+        <a class="cart-add-more-button" href="build-pack.html">
+          ADD MORE FROM BUILD YOUR PACK
+          <span aria-hidden="true">&rarr;</span>
+        </a>
       </div>
 
       <aside class="cart-summary">
@@ -73,7 +79,6 @@
         <button type="button" class="clear-cart-button" data-clear-cart>
           CLEAR CART
         </button>
-        <a href="build-pack.html">BUILD YOUR PACK &rarr;</a>
       </aside>
     </section>
   </main>
@@ -191,6 +196,6 @@
 
   <script src="mock-data.js"></script>
   <script type="module" src="firebase-client.js"></script>
-  <script src="app.js?v=mood-size-1"></script>
+  <script src="app.js?v=bag-quantity-picker-1"></script>
 </body>
 </html>

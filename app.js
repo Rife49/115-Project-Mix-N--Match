@@ -141,9 +141,9 @@ function findProductById(productId) {
 }
 
 /*
-  The live Firebase catalog can be older than the local learning catalog.
-  This adds a local product photo path only when a live product does not have
-  one yet. When Firebase receives the newest catalog, it keeps its own path.
+  The Bag, Build Your Pack, and History pages all read from this one catalog.
+  Firebase decides which products are available, while the local catalog keeps
+  the beginner-friendly product details consistent everywhere on the site.
 */
 function findMockProductById(productId) {
   for (let index = 0; index < mockProducts.length; index += 1) {
@@ -155,19 +155,32 @@ function findMockProductById(productId) {
   return null;
 }
 
-function addLocalImagePathsToFirebaseProducts(firebaseProducts) {
+function addLocalCatalogDetailsToFirebaseProducts(firebaseProducts) {
   return firebaseProducts.map(function (firebaseProduct) {
     const localProduct = findMockProductById(firebaseProduct.id);
-    const firebaseHasImagePath = typeof firebaseProduct.imagePath === "string"
-      && firebaseProduct.imagePath !== "";
 
-    if (localProduct === null || firebaseHasImagePath) {
+    if (localProduct === null) {
       return firebaseProduct;
     }
 
-    firebaseProduct.imagePath = localProduct.imagePath;
+    /* Copy first so the Firebase product object is not changed directly. */
+    const productForDisplay = Object.assign({}, firebaseProduct);
 
-    return firebaseProduct;
+    productForDisplay.imagePath = localProduct.imagePath;
+    productForDisplay.brand = localProduct.brand;
+    productForDisplay.name = localProduct.name;
+    productForDisplay.label = localProduct.label;
+    productForDisplay.subtitle = localProduct.subtitle;
+    productForDisplay.category = localProduct.category;
+    productForDisplay.description = localProduct.description;
+    productForDisplay.price = localProduct.price;
+    productForDisplay.colorClass = localProduct.colorClass;
+    productForDisplay.artShape = localProduct.artShape;
+    productForDisplay.artColor = localProduct.artColor;
+    productForDisplay.tag = localProduct.tag;
+    productForDisplay.tagClass = localProduct.tagClass;
+
+    return productForDisplay;
   });
 }
 
@@ -292,6 +305,53 @@ function createCartRows(cartProductIds) {
   return cartRows;
 }
 
+/*
+  The Bag uses the same product image saved in mock-data.js. If an image is
+  missing, the colorful product label remains as a simple visual backup.
+*/
+function createCartProductPicture(product) {
+  if (typeof product.imagePath === "string" && product.imagePath !== "") {
+    return "<div class=\"cart-item-art cart-item-photo-frame\">" +
+      "<img class=\"cart-item-photo\" src=\"" +
+      product.imagePath +
+      "\" alt=\"" +
+      product.name +
+      " package\">" +
+      "</div>";
+  }
+
+  return "<div class=\"cart-item-art " +
+    product.colorClass +
+    "\">" +
+    product.label +
+    "</div>";
+}
+
+/* The Bag picker changes repeated copies of one product in the current pack. */
+function createCartQuantityPicker(product, productQuantity, cartIsFull) {
+  const increaseDisabledAttribute = cartIsFull ? " disabled" : "";
+
+  return "<div class=\"account-quantity-picker quantity-picker-has-items cart-item-quantity-picker\" aria-label=\"Quantity for " +
+    product.name +
+    "\">" +
+    "<button type=\"button\" data-decrease-cart-product=\"" +
+    product.id +
+    "\" aria-label=\"Remove one " +
+    product.name +
+    " from your Bag\">−</button>" +
+    "<span aria-live=\"polite\">" +
+    productQuantity +
+    "</span>" +
+    "<button type=\"button\" data-increase-cart-product=\"" +
+    product.id +
+    "\" aria-label=\"Add one " +
+    product.name +
+    " to your Bag\"" +
+    increaseDisabledAttribute +
+    ">+</button>" +
+    "</div>";
+}
+
 function renderCartPage() {
   const cartItems = document.querySelector("[data-cart-items]");
   const cartTotal = document.querySelector("[data-cart-total]");
@@ -325,16 +385,13 @@ function renderCartPage() {
   }
 
   let rowsHtml = "";
+  const cartIsFull = cartProductIds.length >= getPackSize();
 
   cartRows.forEach(function (cartRow) {
 
     rowsHtml +=
       "<article class=\"cart-item\">" +
-      "<div class=\"cart-item-art " +
-      cartRow.product.colorClass +
-      "\">" +
-      cartRow.product.label +
-      "</div>" +
+      createCartProductPicture(cartRow.product) +
       "<div class=\"cart-item-details\">" +
       "<p>" +
       cartRow.product.category +
@@ -346,12 +403,11 @@ function renderCartPage() {
       cartRow.product.description +
       "</span>" +
       "</div>" +
-      "<div class=\"cart-item-quantity\">Qty: " +
-      cartRow.quantity +
-      "</div>" +
-      "<button type=\"button\" data-remove-product=\"" +
-      cartRow.product.id +
-      "\">Remove one</button>" +
+      createCartQuantityPicker(
+        cartRow.product,
+        cartRow.quantity,
+        cartIsFull
+      ) +
       "</article>";
   });
 
@@ -381,6 +437,22 @@ function removeOneProductFromCart(productId) {
   renderCartPage();
 }
 
+/* Add one copy in the Bag, without letting the chosen pack become too large. */
+function addOneProductToCart(product) {
+  const cartProductIds = getCart();
+
+  if (cartProductIds.length >= getPackSize()) {
+    showMessage("Your pack is full. Remove an item before adding another.");
+    return;
+  }
+
+  cartProductIds.push(product.id);
+  saveCart(cartProductIds);
+  saveData(storageKeys.buildPack, cartProductIds.slice());
+  renderCartPage();
+  showMessage(product.name + " was added to your Bag.");
+}
+
 function cartIsReadyForCheckout() {
   return getCart().length === getPackSize();
 }
@@ -398,12 +470,32 @@ function updateFakeCheckoutButton() {
 }
 
 function connectCartButtons() {
-  const removeButtons = document.querySelectorAll("[data-remove-product]");
+  const decreaseButtons = document.querySelectorAll(
+    "[data-decrease-cart-product]"
+  );
+  const increaseButtons = document.querySelectorAll(
+    "[data-increase-cart-product]"
+  );
   const clearCartButton = document.querySelector("[data-clear-cart]");
 
-  removeButtons.forEach(function (removeButton) {
-    removeButton.addEventListener("click", function () {
-      removeOneProductFromCart(removeButton.getAttribute("data-remove-product"));
+  decreaseButtons.forEach(function (decreaseButton) {
+    decreaseButton.addEventListener("click", function () {
+      removeOneProductFromCart(
+        decreaseButton.getAttribute("data-decrease-cart-product")
+      );
+    });
+  });
+
+  increaseButtons.forEach(function (increaseButton) {
+    increaseButton.addEventListener("click", function () {
+      const productId = increaseButton.getAttribute("data-increase-cart-product");
+      const product = findProductById(productId);
+
+      if (product === null) {
+        return;
+      }
+
+      addOneProductToCart(product);
     });
   });
 
@@ -1137,7 +1229,31 @@ function connectAccountProductButtons() {
   });
 }
 
+/*
+  The account link leads to the same page in both cases. Its label changes so
+  signed-in shoppers know it is where their past purchases are kept.
+*/
+function updateAccountNavigation() {
+  const accountNavigationLinks = document.querySelectorAll(
+    "[data-account-navigation-link]"
+  );
+  const signedInAccount = getSignedInAccount();
+  let accountLinkLabel = "Sign In";
+  let accountLinkDescription = "Sign in to your account";
+
+  if (signedInAccount !== null) {
+    accountLinkLabel = "History";
+    accountLinkDescription = "Open your account history";
+  }
+
+  accountNavigationLinks.forEach(function (accountLink) {
+    accountLink.textContent = accountLinkLabel;
+    accountLink.setAttribute("aria-label", accountLinkDescription);
+  });
+}
+
 function renderAccountPage() {
+  updateAccountNavigation();
   const signInArea = document.querySelector("[data-account-sign-in-area]");
   const accountDashboard = document.querySelector("[data-account-dashboard]");
   const accountName = document.querySelector("[data-account-name]");
@@ -1856,10 +1972,13 @@ async function loadFirebaseData() {
     const firebaseProducts = await firebaseBackend.loadProducts();
 
     if (firebaseProducts.length > 0) {
-      productsForDisplay = addLocalImagePathsToFirebaseProducts(firebaseProducts);
+      productsForDisplay = addLocalCatalogDetailsToFirebaseProducts(
+        firebaseProducts
+      );
       renderBuildPackProducts();
       connectBuildProductQuantityPickers();
       updateBuildPackPage();
+      renderCartPage();
       renderAccountPage();
     }
 
