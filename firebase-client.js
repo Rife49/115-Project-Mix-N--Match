@@ -30,6 +30,15 @@ const varietyBackend = {
   async loadProducts() {
     return [];
   },
+  async createPasswordAccount() {
+    throw new Error("Firebase Authentication is not connected.");
+  },
+  async signInWithPassword() {
+    throw new Error("Firebase Authentication is not connected.");
+  },
+  async signOutPasswordAccount() {
+    return null;
+  },
   async completeDemoCheckout() {
     return null;
   }
@@ -155,6 +164,46 @@ async function startFirebase() {
 
     varietyBackend.isCatalogReady = true;
 
+    /* Save only safe profile details. Firebase Auth protects the password. */
+    async function saveFirebaseUserProfile(user, displayName) {
+      const userReference = firebaseFirestoreModule.doc(
+        database,
+        "users",
+        user.uid
+      );
+      const userSnapshot = await firebaseFirestoreModule.getDoc(userReference);
+      const profileDetails = {
+        userId: user.uid,
+        email: user.email || "",
+        isAnonymous: user.isAnonymous,
+        lastSeenAt: firebaseFirestoreModule.serverTimestamp()
+      };
+
+      if (typeof displayName === "string" && displayName !== "") {
+        profileDetails.displayName = displayName;
+      }
+
+      if (userSnapshot.exists()) {
+        await firebaseFirestoreModule.updateDoc(userReference, profileDetails);
+        return;
+      }
+
+      profileDetails.createdAt = firebaseFirestoreModule.serverTimestamp();
+      await firebaseFirestoreModule.setDoc(userReference, profileDetails);
+    }
+
+    function getNameFromFirebaseUser(user) {
+      if (typeof user.displayName === "string" && user.displayName !== "") {
+        return user.displayName;
+      }
+
+      if (typeof user.email === "string" && user.email !== "") {
+        return user.email.split("@")[0];
+      }
+
+      return "Friend";
+    }
+
     let currentUser = await waitForExistingUser(
       authentication,
       firebaseAuthModule.onAuthStateChanged
@@ -172,26 +221,10 @@ async function startFirebase() {
       currentUser = signInResult.user;
     }
 
-    const userReference = firebaseFirestoreModule.doc(
-      database,
-      "users",
-      currentUser.uid
+    await saveFirebaseUserProfile(
+      currentUser,
+      getNameFromFirebaseUser(currentUser)
     );
-    const userSnapshot = await firebaseFirestoreModule.getDoc(userReference);
-
-    if (userSnapshot.exists()) {
-      await firebaseFirestoreModule.updateDoc(userReference, {
-        lastSeenAt: firebaseFirestoreModule.serverTimestamp()
-      });
-    } else {
-      await firebaseFirestoreModule.setDoc(userReference, {
-        userId: currentUser.uid,
-        email: currentUser.email || "",
-        isAnonymous: currentUser.isAnonymous,
-        createdAt: firebaseFirestoreModule.serverTimestamp(),
-        lastSeenAt: firebaseFirestoreModule.serverTimestamp()
-      });
-    }
 
     /*
       The catalog function writes only the hard-coded Variety catalog, one time.
@@ -216,6 +249,78 @@ async function startFirebase() {
         "The catalog initializer is unavailable. Using the uploaded Firestore catalog instead."
       );
     }
+
+    /*
+      Upgrade the current anonymous Firebase user when a visitor creates an
+      account. Linking preserves their existing cloud cart instead of making
+      a second, separate cart.
+    */
+    varietyBackend.createPasswordAccount = async function (accountDetails) {
+      const emailAddress = accountDetails.email;
+      const password = accountDetails.password;
+      const accountName = accountDetails.name;
+      const emailCredential = firebaseAuthModule.EmailAuthProvider.credential(
+        emailAddress,
+        password
+      );
+      let userCredential;
+
+      if (currentUser !== null && currentUser.isAnonymous === true) {
+        userCredential = await firebaseAuthModule.linkWithCredential(
+          currentUser,
+          emailCredential
+        );
+      } else {
+        userCredential = await firebaseAuthModule.createUserWithEmailAndPassword(
+          authentication,
+          emailAddress,
+          password
+        );
+      }
+
+      currentUser = userCredential.user;
+
+      await firebaseAuthModule.updateProfile(currentUser, {
+        displayName: accountName
+      });
+      await saveFirebaseUserProfile(currentUser, accountName);
+
+      return {
+        name: accountName,
+        email: currentUser.email || emailAddress
+      };
+    };
+
+    varietyBackend.signInWithPassword = async function (accountDetails) {
+      const userCredential = await firebaseAuthModule.signInWithEmailAndPassword(
+        authentication,
+        accountDetails.email,
+        accountDetails.password
+      );
+
+      currentUser = userCredential.user;
+
+      const accountName = getNameFromFirebaseUser(currentUser);
+
+      await saveFirebaseUserProfile(currentUser, accountName);
+
+      return {
+        name: accountName,
+        email: currentUser.email || accountDetails.email
+      };
+    };
+
+    /* Sign out the password account, then restore a guest Firebase session. */
+    varietyBackend.signOutPasswordAccount = async function () {
+      await firebaseAuthModule.signOut(authentication);
+
+      const signInResult = await firebaseAuthModule.signInAnonymously(
+        authentication
+      );
+
+      currentUser = signInResult.user;
+      await saveFirebaseUserProfile(currentUser, "");
+    };
 
     varietyBackend.loadCart = async function () {
       const cartReference = firebaseFirestoreModule.doc(

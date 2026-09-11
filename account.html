@@ -9,7 +9,7 @@
   >
   <title>Sign In | Variety Co.</title>
   <link rel="stylesheet" href="css/build-pack.css?v=classic-colors-1">
-  <link rel="stylesheet" href="css/app.css?v=history-add-more-1">
+  <link rel="stylesheet" href="css/app.css?v=password-auth-1">
 </head>
 <body class="utility-page">
   <div class="announcement">
@@ -54,17 +54,22 @@
           box for the next time you want the same favorites.
         </p>
 
-        <form data-account-sign-in-form>
-          <label for="account-name">
-            YOUR NAME
-            <input
-              id="account-name"
-              type="text"
-              autocomplete="name"
-              data-account-name-input
-              required
-            >
-          </label>
+        <form class="account-auth-form" data-account-sign-in-form data-account-mode="sign-in">
+          <p class="account-auth-mode-copy" data-account-mode-copy>
+            Sign in with the email address and password for your Variety account.
+          </p>
+
+          <div class="account-name-field" data-account-name-field hidden>
+            <label for="account-name">
+              YOUR NAME
+              <input
+                id="account-name"
+                type="text"
+                autocomplete="name"
+                data-account-name-input
+              >
+            </label>
+          </div>
 
           <label for="account-email">
             EMAIL ADDRESS
@@ -77,12 +82,45 @@
             >
           </label>
 
-          <button type="submit">SIGN IN</button>
+          <label for="account-password">
+            PASSWORD
+            <input
+              id="account-password"
+              type="password"
+              autocomplete="current-password"
+              minlength="8"
+              data-account-password-input
+              required
+            >
+          </label>
+
+          <div class="account-confirm-password-field" data-account-confirm-password-field hidden>
+            <label for="account-confirm-password">
+              CONFIRM PASSWORD
+              <input
+                id="account-confirm-password"
+                type="password"
+                autocomplete="new-password"
+                minlength="8"
+                data-account-confirm-password-input
+              >
+            </label>
+          </div>
+
+          <button type="submit" data-account-submit-button>SIGN IN</button>
+          <button
+            type="button"
+            class="account-auth-toggle"
+            data-account-mode-toggle
+          >
+            CREATE AN ACCOUNT
+          </button>
+          <p class="account-form-message" data-account-form-message aria-live="polite" hidden></p>
         </form>
 
         <p class="account-form-note">
-          Learning version: your name and email are saved only in this browser.
-          No password is collected.
+          Passwords are handled by Firebase Authentication and are never saved
+          in this browser. Use at least 8 characters for a new password.
         </p>
       </div>
     </section>
@@ -155,7 +193,7 @@
   </footer>
 
   <script src="mock-data.js"></script>
-  <script type="module" src="firebase-client.js"></script>
-  <script src="app.js?v=bag-quantity-picker-1"></script>
+  <script type="module" src="firebase-client.js?v=password-auth-1"></script>
+  <script src="app.js?v=password-auth-1"></script>
 </body>
 </html>

@@ -624,6 +624,21 @@
   gap: 16px;
 }
 
+.account-auth-mode-copy {
+  margin: -6px 0 4px;
+  color: #625e56;
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.account-name-field[hidden] {
+  display: none;
+}
+
+.account-confirm-password-field[hidden] {
+  display: none;
+}
+
 .account-sign-in-card label {
   display: grid;
   gap: 7px;
@@ -665,6 +680,30 @@
 .quick-box-panel > button:focus-visible {
   outline: 3px solid var(--lime);
   outline-offset: 3px;
+}
+
+.account-sign-in-card .account-auth-toggle {
+  padding: 11px 0;
+  border: 0;
+  border-bottom: 1px solid var(--ink);
+  background-color: transparent;
+  color: var(--ink);
+  font-size: 10px;
+}
+
+.account-sign-in-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.55;
+}
+
+.account-form-message {
+  margin: -3px 0 0;
+  padding: 10px 12px;
+  border-left: 3px solid var(--red);
+  background-color: #fff1ef;
+  color: #7c241d;
+  font-size: 12px;
+  line-height: 1.45;
 }
 
 .account-form-note {

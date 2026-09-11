@@ -48,11 +48,11 @@ function saveData(storageKey, value) {
   localStorage.setItem(storageKey, JSON.stringify(value));
 }
 
-/* ---------- Learning account and quick reorder data ---------- */
+/* ---------- Account and quick reorder data ---------- */
 
 /*
-  This is a browser-only learning account, not a password system. The name and
-  email help us give each person using this browser their own saved lists.
+  Firebase Authentication protects the password. Local storage keeps only the
+  name and email needed to label this browser's saved History and Quick Box.
 */
 function getSignedInAccount() {
   const savedAccount = getSavedData(storageKeys.account, null);
@@ -1281,6 +1281,142 @@ function renderAccountPage() {
   connectAccountProductButtons();
 }
 
+/* Show a helpful, safe message without displaying Firebase's raw error text. */
+function getPasswordAccountErrorMessage(error) {
+  if (error === undefined || error === null) {
+    return "We could not complete that request. Please try again.";
+  }
+
+  if (
+    error.code === "auth/email-already-in-use"
+    || error.code === "auth/credential-already-in-use"
+  ) {
+    return "That email already has an account. Choose Sign In instead.";
+  }
+
+  if (
+    error.code === "auth/invalid-credential"
+    || error.code === "auth/wrong-password"
+    || error.code === "auth/user-not-found"
+  ) {
+    return "That email or password is not correct. Please try again.";
+  }
+
+  if (error.code === "auth/weak-password") {
+    return "Choose a stronger password with at least 8 characters.";
+  }
+
+  if (error.code === "auth/invalid-email") {
+    return "Enter a valid email address.";
+  }
+
+  if (error.code === "auth/operation-not-allowed") {
+    return "Email/password sign-in must be enabled in Firebase Authentication first.";
+  }
+
+  if (error.code === "auth/network-request-failed") {
+    return "Check your internet connection, then try again.";
+  }
+
+  return "We could not complete that request. Please try again.";
+}
+
+function showAccountFormMessage(signInForm, messageText) {
+  const formMessage = signInForm.querySelector("[data-account-form-message]");
+
+  if (formMessage === null) {
+    return;
+  }
+
+  formMessage.textContent = messageText;
+  formMessage.hidden = false;
+}
+
+function clearAccountFormMessage(signInForm) {
+  const formMessage = signInForm.querySelector("[data-account-form-message]");
+
+  if (formMessage === null) {
+    return;
+  }
+
+  formMessage.textContent = "";
+  formMessage.hidden = true;
+}
+
+/* Switch the same small form between signing in and creating an account. */
+function setAccountFormMode(signInForm, formMode) {
+  const nameField = signInForm.querySelector("[data-account-name-field]");
+  const nameInput = signInForm.querySelector("[data-account-name-input]");
+  const passwordInput = signInForm.querySelector(
+    "[data-account-password-input]"
+  );
+  const confirmPasswordField = signInForm.querySelector(
+    "[data-account-confirm-password-field]"
+  );
+  const confirmPasswordInput = signInForm.querySelector(
+    "[data-account-confirm-password-input]"
+  );
+  const modeCopy = signInForm.querySelector("[data-account-mode-copy]");
+  const submitButton = signInForm.querySelector("[data-account-submit-button]");
+  const modeToggle = signInForm.querySelector("[data-account-mode-toggle]");
+  const isCreatingAccount = formMode === "create";
+
+  signInForm.dataset.accountMode = formMode;
+
+  if (nameField !== null) {
+    nameField.hidden = !isCreatingAccount;
+  }
+
+  if (nameInput !== null) {
+    nameInput.required = isCreatingAccount;
+  }
+
+  if (passwordInput !== null) {
+    passwordInput.autocomplete = isCreatingAccount
+      ? "new-password"
+      : "current-password";
+  }
+
+  if (confirmPasswordField !== null) {
+    confirmPasswordField.hidden = !isCreatingAccount;
+  }
+
+  if (confirmPasswordInput !== null) {
+    confirmPasswordInput.required = isCreatingAccount;
+  }
+
+  if (modeCopy !== null) {
+    modeCopy.textContent = isCreatingAccount
+      ? "Create an account to keep your favorites with your email and password."
+      : "Sign in with the email address and password for your Variety account.";
+  }
+
+  if (submitButton !== null) {
+    submitButton.textContent = isCreatingAccount
+      ? "CREATE ACCOUNT"
+      : "SIGN IN";
+  }
+
+  if (modeToggle !== null) {
+    modeToggle.textContent = isCreatingAccount
+      ? "I ALREADY HAVE AN ACCOUNT"
+      : "CREATE AN ACCOUNT";
+  }
+
+  clearAccountFormMessage(signInForm);
+}
+
+/* Firebase provides the display name. This fallback is used for older accounts. */
+function getAccountNameFromEmail(emailAddress) {
+  const emailParts = emailAddress.split("@");
+
+  if (emailParts[0] === undefined || emailParts[0] === "") {
+    return "Friend";
+  }
+
+  return emailParts[0];
+}
+
 function setupAccountPage() {
   const signInForm = document.querySelector("[data-account-sign-in-form]");
   const signOutButton = document.querySelector("[data-account-sign-out]");
@@ -1292,28 +1428,135 @@ function setupAccountPage() {
     return;
   }
 
-  signInForm.addEventListener("submit", function (event) {
+  const modeToggle = signInForm.querySelector("[data-account-mode-toggle]");
+
+  setAccountFormMode(signInForm, "sign-in");
+
+  if (modeToggle !== null) {
+    modeToggle.addEventListener("click", function () {
+      const currentMode = signInForm.dataset.accountMode;
+      const nextMode = currentMode === "create" ? "sign-in" : "create";
+
+      setAccountFormMode(signInForm, nextMode);
+    });
+  }
+
+  signInForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const nameInput = document.querySelector("[data-account-name-input]");
-    const emailInput = document.querySelector("[data-account-email-input]");
+    const nameInput = signInForm.querySelector("[data-account-name-input]");
+    const emailInput = signInForm.querySelector("[data-account-email-input]");
+    const passwordInput = signInForm.querySelector(
+      "[data-account-password-input]"
+    );
+    const confirmPasswordInput = signInForm.querySelector(
+      "[data-account-confirm-password-input]"
+    );
+    const submitButton = signInForm.querySelector("[data-account-submit-button]");
+    const formMode = signInForm.dataset.accountMode;
+    const firebaseBackend = window.varietyBackend;
 
-    if (nameInput === null || emailInput === null) {
+    if (emailInput === null || passwordInput === null || submitButton === null) {
       return;
     }
 
-    saveData(storageKeys.account, {
-      name: nameInput.value.trim(),
-      email: emailInput.value.trim().toLowerCase()
-    });
+    if (firebaseBackend === undefined || firebaseBackend.isReady !== true) {
+      showAccountFormMessage(
+        signInForm,
+        "Password sign-in is not connected yet. Please refresh and try again."
+      );
+      return;
+    }
 
-    signInForm.reset();
-    renderAccountPage();
-    showMessage("You are signed in. Your saved lists are ready.");
+    const emailAddress = emailInput.value.trim().toLowerCase();
+    const password = passwordInput.value;
+    const accountName = nameInput === null ? "" : nameInput.value.trim();
+    const confirmedPassword = confirmPasswordInput === null
+      ? ""
+      : confirmPasswordInput.value;
+
+    if (formMode === "create" && accountName === "") {
+      showAccountFormMessage(signInForm, "Enter your name to create an account.");
+      return;
+    }
+
+    if (formMode === "create" && password !== confirmedPassword) {
+      showAccountFormMessage(signInForm, "Your passwords do not match.");
+      return;
+    }
+
+    submitButton.disabled = true;
+
+    if (modeToggle !== null) {
+      modeToggle.disabled = true;
+    }
+
+    clearAccountFormMessage(signInForm);
+
+    try {
+      let firebaseAccount;
+
+      if (formMode === "create") {
+        firebaseAccount = await firebaseBackend.createPasswordAccount({
+          name: accountName,
+          email: emailAddress,
+          password: password
+        });
+      } else {
+        firebaseAccount = await firebaseBackend.signInWithPassword({
+          email: emailAddress,
+          password: password
+        });
+      }
+
+      const savedName = typeof firebaseAccount.name === "string"
+        && firebaseAccount.name !== ""
+        ? firebaseAccount.name
+        : getAccountNameFromEmail(emailAddress);
+
+      saveData(storageKeys.account, {
+        name: savedName,
+        email: firebaseAccount.email
+      });
+
+      signInForm.reset();
+      setAccountFormMode(signInForm, "sign-in");
+      renderAccountPage();
+      loadFirebaseData();
+
+      showMessage(
+        formMode === "create"
+          ? "Your Variety account is ready."
+          : "You are signed in. Your saved lists are ready."
+      );
+    } catch (error) {
+      showAccountFormMessage(signInForm, getPasswordAccountErrorMessage(error));
+    } finally {
+      submitButton.disabled = false;
+
+      if (modeToggle !== null) {
+        modeToggle.disabled = false;
+      }
+    }
   });
 
   if (signOutButton !== null) {
-    signOutButton.addEventListener("click", function () {
+    signOutButton.addEventListener("click", async function () {
+      const firebaseBackend = window.varietyBackend;
+
+      if (
+        firebaseBackend !== undefined
+        && firebaseBackend.isReady === true
+        && typeof firebaseBackend.signOutPasswordAccount === "function"
+      ) {
+        try {
+          await firebaseBackend.signOutPasswordAccount();
+        } catch (error) {
+          showMessage("We could not sign you out. Please try again.");
+          return;
+        }
+      }
+
       localStorage.removeItem(storageKeys.account);
       renderAccountPage();
       showMessage("You are signed out on this browser.");
